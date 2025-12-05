@@ -6,80 +6,81 @@ Create comprehensive user stories with acceptance criteria for a loan account ma
 ## Plan Steps
 
 ### Phase 1: Analysis & Preparation
-- [ ] **Step 1.1**: Review and analyze the complete Manserv documentation structure
+- [x] **Step 1.1**: Review and analyze the complete Manserv documentation structure
   - Identify all 6 main tabs/sections (General, Customer Information/Approval, Loan Info, Balances, Collateral/Dates/GL, Manner of Release)
   - Map all mandatory vs optional fields
   - Understand field dependencies and validation rules
   - Document reference data relationships (RLSSYS, RLSGROUP tables)
 
-- [ ] **Step 1.2**: Create inception directory structure
+- [x] **Step 1.2**: Create inception directory structure
   - Create `/inception/` directory
   - Prepare `overview_user_stories.md` file structure
 
 ### Phase 2: User Story Development
-- [ ] **Step 2.1**: Create user stories for GENERAL section
+- [x] **Step 2.1**: Create user stories for GENERAL section
   - Reference Number management (Ref. No, Prev. Ref. No)
   - Customer identification (CRIB ID, Customer Name, NIDSS Account No, Long Name)
   - Include all mandatory field validations
 
-- [ ] **Step 2.2**: Create user stories for Customer Information/Approval tab
+- [x] **Step 2.2**: Create user stories for Customer Information/Approval tab
   - Customer Information subsection (Address, Affiliate, Location, Type of Borrower, etc.)
   - Approval subsection (DOSRI, Size of Firm, Financial data, etc.)
   - Include dropdown list integrations with RLSSYS reference data
   - Include conditional field logic (e.g., No. of OFW enabled when OFW = Y)
 
-- [ ] **Step 2.3**: Create user stories for Loan Info tab
+- [x] **Step 2.3**: Create user stories for Loan Info tab
   - Account identification fields (Center Code, Budget Unit, Corporation, Book Code)
   - Loan classification (Economic Activity, Account Type, Purpose, etc.)
   - Loan status fields (Restructured, Type of Credit, Maturity Code, etc.)
   - Include auto-population logic and conditional mandatory fields
 
-- [ ] **Step 2.4**: Create user stories for Balances tab
+- [x] **Step 2.4**: Create user stories for Balances tab
   - Multi-currency support (Others, USD, Peso)
   - Currency conversion rates
   - Financial amounts (Approved, Released, OPB, Reserves, AIR, etc.)
   - Include calculation rules (e.g., Amount Secured + Amount Unsecured = OPB)
 
-- [ ] **Step 2.5**: Create user stories for Collateral/Dates/GL tab
+- [x] **Step 2.5**: Create user stories for Collateral/Dates/GL tab
   - Collateral subsection (Security Code, Amount Secured/Unsecured, collateral types)
   - Dates subsection (Date of Last Transaction, Past Due tracking, Interest Rate)
   - GL subsection (General Ledger account codes for various transaction types)
   - Include validation rules and dependencies
 
-- [ ] **Step 2.6**: Create user stories for Manner of Release tab
+- [x] **Step 2.6**: Create user stories for Manner of Release tab
   - Description fields for DR/CR entries
   - Credit Alias management
   - Include mandatory field requirements
 
 ### Phase 3: Cross-Cutting User Stories
-- [ ] **Step 3.1**: Create user stories for reference data management
+- [x] **Step 3.1**: Create user stories for reference data management
   - RLSSYS lookup integration (dropdowns, validation)
   - RLSGROUP integration
-  - **Note**: Need clarification on whether reference data management is in scope or if it's assumed to exist
+  - All reference tables from additional table documentation (RLSACCT, RLSECON, GLMACCT, RLSCUST, MNSHTRAN, MNSHBRR, RLSCTR)
 
-- [ ] **Step 3.2**: Create user stories for data validation & business rules
+- [x] **Step 3.2**: Create user stories for data validation & business rules
   - Field-level validations (mandatory fields, data types, formats)
   - Cross-field validations (e.g., OPB = Amount Secured + Amount Unsecured)
   - Auto-population rules
   - Conditional field enablement
 
-- [ ] **Step 3.3**: Create user stories for form navigation & usability
+- [x] **Step 3.3**: Create user stories for form navigation & usability
   - Tab navigation between sections
   - Save/Cancel/Close operations
-  - **Note**: Need clarification on whether to include CRUD operations (Create, Read, Update, Delete) or focus only on Create/Update
+  - Full CRUD operations (Create, Read, Update, Delete)
+  - Search and reporting capabilities
 
 ### Phase 4: Review & Finalization
-- [ ] **Step 4.1**: Review all user stories for completeness
+- [x] **Step 4.1**: Review all user stories for completeness
   - Ensure all fields from documentation are covered
   - Verify acceptance criteria are testable and specific
   - Check for consistency across user stories
 
-- [ ] **Step 4.2**: Organize user stories in overview_user_stories.md
+- [x] **Step 4.2**: Organize user stories in overview_user_stories.md
   - Group by functional area/tab
   - Number user stories sequentially
   - Include clear acceptance criteria for each story
 
-- [ ] **Step 4.3**: Final quality check
+- [x] **Step 4.3**: Final quality check
   - Ensure all mandatory fields are marked
   - Verify all reference data dependencies are documented
   - Confirm all business rules and validations are captured

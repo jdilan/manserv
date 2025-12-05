@@ -1,4 +1,22 @@
 {
   "mcpServers": {
+    "fetch": {
+      "command": "C:\\Users\\cjsliwanag\\.local\\bin\\uvx.exe",
+      "args": ["mcp-server-fetch"],
+      "env": {
+        "FASTMCP_LOG_LEVEL": "ERROR"
+      },
+      "disabled": false,
+      "autoApprove": []
+    },
+    "document-loader": {
+      "command": "C:\\Users\\cjsliwanag\\.local\\bin\\uvx.exe",
+      "args": ["--python", "3.13", "awslabs.document-loader-mcp-server@latest"],
+      "env": {
+        "FASTMCP_LOG_LEVEL": "ERROR"
+      },
+      "disabled": false,
+      "autoApprove": []
+    }
   }
 }
