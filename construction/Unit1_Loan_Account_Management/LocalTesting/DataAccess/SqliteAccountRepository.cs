@@ -300,4 +300,333 @@ namespace ManservLoanSystem.LocalTesting.DataAccess
             {
                 cmd.Parameters.AddRange(parameters.ToArray());
                 
+                using (var reader = cmd.ExecuteReader())      
+          {
+                    while (reader.Read())
+                    {
+                        accounts.Add(MapReaderToAccount(reader));
+                    }
+                }
+            }
+
+            return accounts;
+        }
+
+        /// <summary>
+        /// Check if reference number exists
+        /// </summary>
+        public bool ExistsByReferenceNumber(string referenceNumber, int? excludeAccountId = null)
+        {
+            var sql = "SELECT COUNT(*) FROM Account WHERE ReferenceNumber = @ReferenceNumber";
+            
+            if (excludeAccountId.HasValue)
+            {
+                sql += " AND AccountId != @ExcludeAccountId";
+            }
+
+            using (var cmd = new SQLiteCommand(sql, _connection))
+            {
+                cmd.Parameters.AddWithValue("@ReferenceNumber", referenceNumber);
+                
+                if (excludeAccountId.HasValue)
+                {
+                    cmd.Parameters.AddWithValue("@ExcludeAccountId", excludeAccountId.Value);
+                }
+                
+                var count = Convert.ToInt32(cmd.ExecuteScalar());
+                return count > 0;
+            }
+        }
+
+        /// <summary>
+        /// Get accounts by center code
+        /// </summary>
+        public List<Account> GetByCenterCode(string centerCode)
+        {
+            const string sql = "SELECT * FROM Account WHERE CenterCode = @CenterCode AND Status != 'Deleted' ORDER BY CreatedDate DESC";
+
+            var accounts = new List<Account>();
+
+            using (var cmd = new SQLiteCommand(sql, _connection))
+            {
+                cmd.Parameters.AddWithValue("@CenterCode", centerCode);
+                
                 using (var reader = cmd.ExecuteReader())
+                {
+                    while (reader.Read())
+                    {
+                        accounts.Add(MapReaderToAccount(reader));
+                    }
+                }
+            }
+
+            return accounts;
+        }
+
+        /// <summary>
+        /// Get accounts by status
+        /// </summary>
+        public List<Account> GetByStatus(string status)
+        {
+            const string sql = "SELECT * FROM Account WHERE Status = @Status ORDER BY CreatedDate DESC";
+
+            var accounts = new List<Account>();
+
+            using (var cmd = new SQLiteCommand(sql, _connection))
+            {
+                cmd.Parameters.AddWithValue("@Status", status);
+                
+                using (var reader = cmd.ExecuteReader())
+                {
+                    while (reader.Read())
+                    {
+                        accounts.Add(MapReaderToAccount(reader));
+                    }
+                }
+            }
+
+            return accounts;
+        }
+
+        #endregion
+
+        #region Audit Operations
+
+        /// <summary>
+        /// Create audit record
+        /// </summary>
+        public void CreateAudit(AccountAudit audit)
+        {
+            const string sql = @"
+                INSERT INTO AccountAudit (
+                    AccountId, ReferenceNumber, Action, FieldName, OldValue, NewValue,
+                    ChangedBy, ChangedDate, UserRole, IPAddress, Comments
+                )
+                VALUES (
+                    @AccountId, @ReferenceNumber, @Action, @FieldName, @OldValue, @NewValue,
+                    @ChangedBy, @ChangedDate, @UserRole, @IPAddress, @Comments
+                )";
+
+            using (var cmd = new SQLiteCommand(sql, _connection))
+            {
+                cmd.Parameters.AddWithValue("@AccountId", audit.AccountId);
+                cmd.Parameters.AddWithValue("@ReferenceNumber", audit.ReferenceNumber);
+                cmd.Parameters.AddWithValue("@Action", audit.Action);
+                cmd.Parameters.AddWithValue("@FieldName", audit.FieldName ?? (object)DBNull.Value);
+                cmd.Parameters.AddWithValue("@OldValue", audit.OldValue ?? (object)DBNull.Value);
+                cmd.Parameters.AddWithValue("@NewValue", audit.NewValue ?? (object)DBNull.Value);
+                cmd.Parameters.AddWithValue("@ChangedBy", audit.ChangedBy);
+                cmd.Parameters.AddWithValue("@ChangedDate", audit.ChangedDate.ToString("yyyy-MM-dd HH:mm:ss"));
+                cmd.Parameters.AddWithValue("@UserRole", audit.UserRole);
+                cmd.Parameters.AddWithValue("@IPAddress", audit.IPAddress ?? (object)DBNull.Value);
+                cmd.Parameters.AddWithValue("@Comments", audit.Comments ?? (object)DBNull.Value);
+                
+                cmd.ExecuteNonQuery();
+            }
+        }
+
+        /// <summary>
+        /// Get audit history for account
+        /// </summary>
+        public List<AccountAudit> GetAuditHistory(int accountId)
+        {
+            const string sql = "SELECT * FROM AccountAudit WHERE AccountId = @AccountId ORDER BY ChangedDate DESC";
+
+            var audits = new List<AccountAudit>();
+
+            using (var cmd = new SQLiteCommand(sql, _connection))
+            {
+                cmd.Parameters.AddWithValue("@AccountId", accountId);
+                
+                using (var reader = cmd.ExecuteReader())
+                {
+                    while (reader.Read())
+                    {
+                        audits.Add(new AccountAudit
+                        {
+                            AuditId = reader.GetInt32(reader.GetOrdinal("AuditId")),
+                            AccountId = reader.GetInt32(reader.GetOrdinal("AccountId")),
+                            ReferenceNumber = reader.GetString(reader.GetOrdinal("ReferenceNumber")),
+                            Action = reader.GetString(reader.GetOrdinal("Action")),
+                            FieldName = reader.IsDBNull(reader.GetOrdinal("FieldName")) ? null : reader.GetString(reader.GetOrdinal("FieldName")),
+                            OldValue = reader.IsDBNull(reader.GetOrdinal("OldValue")) ? null : reader.GetString(reader.GetOrdinal("OldValue")),
+                            NewValue = reader.IsDBNull(reader.GetOrdinal("NewValue")) ? null : reader.GetString(reader.GetOrdinal("NewValue")),
+                            ChangedBy = reader.GetString(reader.GetOrdinal("ChangedBy")),
+                            ChangedDate = DateTime.Parse(reader.GetString(reader.GetOrdinal("ChangedDate"))),
+                            UserRole = reader.GetString(reader.GetOrdinal("UserRole")),
+                            IPAddress = reader.IsDBNull(reader.GetOrdinal("IPAddress")) ? null : reader.GetString(reader.GetOrdinal("IPAddress")),
+                            Comments = reader.IsDBNull(reader.GetOrdinal("Comments")) ? null : reader.GetString(reader.GetOrdinal("Comments"))
+                        });
+                    }
+                }
+            }
+
+            return audits;
+        }
+
+        #endregion
+
+        #region Relationship Operations
+
+        /// <summary>
+        /// Create account relationship
+        /// </summary>
+        public void CreateRelationship(AccountRelationship relationship)
+        {
+            const string sql = @"
+                INSERT INTO AccountRelationship (
+                    SourceAccountId, TargetAccountId, RelationshipType, CreatedBy, CreatedDate
+                )
+                VALUES (
+                    @SourceAccountId, @TargetAccountId, @RelationshipType, @CreatedBy, @CreatedDate
+                )";
+
+            using (var cmd = new SQLiteCommand(sql, _connection))
+            {
+                cmd.Parameters.AddWithValue("@SourceAccountId", relationship.SourceAccountId);
+                cmd.Parameters.AddWithValue("@TargetAccountId", relationship.TargetAccountId);
+                cmd.Parameters.AddWithValue("@RelationshipType", relationship.RelationshipType);
+                cmd.Parameters.AddWithValue("@CreatedBy", relationship.CreatedBy);
+                cmd.Parameters.AddWithValue("@CreatedDate", relationship.CreatedDate.ToString("yyyy-MM-dd HH:mm:ss"));
+                
+                cmd.ExecuteNonQuery();
+            }
+        }
+
+        /// <summary>
+        /// Get relationships for account
+        /// </summary>
+        public List<AccountRelationship> GetRelationships(int accountId)
+        {
+            const string sql = @"
+                SELECT * FROM AccountRelationship 
+                WHERE SourceAccountId = @AccountId OR TargetAccountId = @AccountId
+                ORDER BY CreatedDate DESC";
+
+            var relationships = new List<AccountRelationship>();
+
+            using (var cmd = new SQLiteCommand(sql, _connection))
+            {
+                cmd.Parameters.AddWithValue("@AccountId", accountId);
+                
+                using (var reader = cmd.ExecuteReader())
+                {
+                    while (reader.Read())
+                    {
+                        relationships.Add(new AccountRelationship
+                        {
+                            RelationshipId = reader.GetInt32(reader.GetOrdinal("RelationshipId")),
+                            SourceAccountId = reader.GetInt32(reader.GetOrdinal("SourceAccountId")),
+                            TargetAccountId = reader.GetInt32(reader.GetOrdinal("TargetAccountId")),
+                            RelationshipType = reader.GetString(reader.GetOrdinal("RelationshipType")),
+                            CreatedBy = reader.GetString(reader.GetOrdinal("CreatedBy")),
+                            CreatedDate = DateTime.Parse(reader.GetString(reader.GetOrdinal("CreatedDate")))
+                        });
+                    }
+                }
+            }
+
+            return relationships;
+        }
+
+        #endregion
+
+        #region Helper Methods
+
+        /// <summary>
+        /// Add account parameters to command
+        /// </summary>
+        private void AddAccountParameters(SQLiteCommand cmd, Account account)
+        {
+            cmd.Parameters.AddWithValue("@ReferenceNumber", account.ReferenceNumber);
+            cmd.Parameters.AddWithValue("@PreviousReferenceNumber", account.PreviousReferenceNumber);
+            cmd.Parameters.AddWithValue("@CRIBIDNumber", account.CRIBIDNumber ?? (object)DBNull.Value);
+            cmd.Parameters.AddWithValue("@CustomerName", account.CustomerName);
+            cmd.Parameters.AddWithValue("@NIDSSAccountNumber", account.NIDSSAccountNumber ?? (object)DBNull.Value);
+            cmd.Parameters.AddWithValue("@LongName", account.LongName);
+            cmd.Parameters.AddWithValue("@CenterCode", account.CenterCode);
+            cmd.Parameters.AddWithValue("@BudgetUnit", account.BudgetUnit);
+            cmd.Parameters.AddWithValue("@Corporation", account.Corporation);
+            cmd.Parameters.AddWithValue("@BookCode", account.BookCode);
+            cmd.Parameters.AddWithValue("@EconomicActivityCode", account.EconomicActivityCode);
+            cmd.Parameters.AddWithValue("@OriginalReleaseDate", account.OriginalReleaseDate.ToString("yyyy-MM-dd"));
+            cmd.Parameters.AddWithValue("@StartOfTerm", account.StartOfTerm.ToString("yyyy-MM-dd"));
+            cmd.Parameters.AddWithValue("@MaturityDate", account.MaturityDate.ToString("yyyy-MM-dd"));
+            cmd.Parameters.AddWithValue("@AccountType", account.AccountType);
+            cmd.Parameters.AddWithValue("@Purpose", account.Purpose ?? (object)DBNull.Value);
+            cmd.Parameters.AddWithValue("@FundSource", account.FundSource);
+            cmd.Parameters.AddWithValue("@LendingProgram", account.LendingProgram);
+            cmd.Parameters.AddWithValue("@Area", account.Area);
+            cmd.Parameters.AddWithValue("@IsRestructured", account.IsRestructured ? 1 : 0);
+            cmd.Parameters.AddWithValue("@TypeOfCredit", account.TypeOfCredit);
+            cmd.Parameters.AddWithValue("@MaturityCode", account.MaturityCode);
+            cmd.Parameters.AddWithValue("@PurposeOfCredit", account.PurposeOfCredit);
+            cmd.Parameters.AddWithValue("@NumberOfRecords", account.NumberOfRecords ?? (object)DBNull.Value);
+            cmd.Parameters.AddWithValue("@IsGuaranteed", account.IsGuaranteed ? 1 : 0);
+            cmd.Parameters.AddWithValue("@GuaranteedBy", account.GuaranteedBy ?? (object)DBNull.Value);
+            cmd.Parameters.AddWithValue("@IsUnderLitigation", account.IsUnderLitigation ? 1 : 0);
+            cmd.Parameters.AddWithValue("@LitigationDate", account.LitigationDate?.ToString("yyyy-MM-dd") ?? (object)DBNull.Value);
+            cmd.Parameters.AddWithValue("@LoanStatus", account.LoanStatus);
+            cmd.Parameters.AddWithValue("@LoanProjectType", account.LoanProjectType);
+            cmd.Parameters.AddWithValue("@Currency", account.Currency);
+            cmd.Parameters.AddWithValue("@Status", account.Status);
+            cmd.Parameters.AddWithValue("@IsDraft", account.IsDraft ? 1 : 0);
+            cmd.Parameters.AddWithValue("@ClosureDate", account.ClosureDate?.ToString("yyyy-MM-dd") ?? (object)DBNull.Value);
+            cmd.Parameters.AddWithValue("@CreatedBy", account.CreatedBy);
+            cmd.Parameters.AddWithValue("@CreatedDate", account.CreatedDate.ToString("yyyy-MM-dd HH:mm:ss"));
+        }
+
+        /// <summary>
+        /// Map data reader to Account entity
+        /// </summary>
+        private Account MapReaderToAccount(SQLiteDataReader reader)
+        {
+            return new Account
+            {
+                AccountId = reader.GetInt32(reader.GetOrdinal("AccountId")),
+                ReferenceNumber = reader.GetString(reader.GetOrdinal("ReferenceNumber")),
+                PreviousReferenceNumber = reader.GetString(reader.GetOrdinal("PreviousReferenceNumber")),
+                CRIBIDNumber = reader.IsDBNull(reader.GetOrdinal("CRIBIDNumber")) ? null : reader.GetString(reader.GetOrdinal("CRIBIDNumber")),
+                CustomerName = reader.GetString(reader.GetOrdinal("CustomerName")),
+                NIDSSAccountNumber = reader.IsDBNull(reader.GetOrdinal("NIDSSAccountNumber")) ? null : reader.GetString(reader.GetOrdinal("NIDSSAccountNumber")),
+                LongName = reader.GetString(reader.GetOrdinal("LongName")),
+                CenterCode = reader.GetString(reader.GetOrdinal("CenterCode")),
+                BudgetUnit = reader.GetString(reader.GetOrdinal("BudgetUnit")),
+                Corporation = reader.GetString(reader.GetOrdinal("Corporation")),
+                BookCode = reader.GetString(reader.GetOrdinal("BookCode")),
+                EconomicActivityCode = reader.GetString(reader.GetOrdinal("EconomicActivityCode")),
+                OriginalReleaseDate = DateTime.Parse(reader.GetString(reader.GetOrdinal("OriginalReleaseDate"))),
+                StartOfTerm = DateTime.Parse(reader.GetString(reader.GetOrdinal("StartOfTerm"))),
+                MaturityDate = DateTime.Parse(reader.GetString(reader.GetOrdinal("MaturityDate"))),
+                AccountType = reader.GetString(reader.GetOrdinal("AccountType")),
+                Purpose = reader.IsDBNull(reader.GetOrdinal("Purpose")) ? null : reader.GetString(reader.GetOrdinal("Purpose")),
+                FundSource = reader.GetString(reader.GetOrdinal("FundSource")),
+                LendingProgram = reader.GetString(reader.GetOrdinal("LendingProgram")),
+                Area = reader.GetString(reader.GetOrdinal("Area")),
+                IsRestructured = reader.GetInt32(reader.GetOrdinal("IsRestructured")) == 1,
+                TypeOfCredit = reader.GetString(reader.GetOrdinal("TypeOfCredit")),
+                MaturityCode = reader.GetString(reader.GetOrdinal("MaturityCode")),
+                PurposeOfCredit = reader.GetString(reader.GetOrdinal("PurposeOfCredit")),
+                NumberOfRecords = reader.IsDBNull(reader.GetOrdinal("NumberOfRecords")) ? (int?)null : reader.GetInt32(reader.GetOrdinal("NumberOfRecords")),
+                IsGuaranteed = reader.GetInt32(reader.GetOrdinal("IsGuaranteed")) == 1,
+                GuaranteedBy = reader.IsDBNull(reader.GetOrdinal("GuaranteedBy")) ? null : reader.GetString(reader.GetOrdinal("GuaranteedBy")),
+                IsUnderLitigation = reader.GetInt32(reader.GetOrdinal("IsUnderLitigation")) == 1,
+                LitigationDate = reader.IsDBNull(reader.GetOrdinal("LitigationDate")) ? (DateTime?)null : DateTime.Parse(reader.GetString(reader.GetOrdinal("LitigationDate"))),
+                LoanStatus = reader.GetString(reader.GetOrdinal("LoanStatus")),
+                LoanProjectType = reader.GetString(reader.GetOrdinal("LoanProjectType")),
+                Currency = reader.GetString(reader.GetOrdinal("Currency")),
+                Status = reader.GetString(reader.GetOrdinal("Status")),
+                IsDraft = reader.GetInt32(reader.GetOrdinal("IsDraft")) == 1,
+                ClosureDate = reader.IsDBNull(reader.GetOrdinal("ClosureDate")) ? (DateTime?)null : DateTime.Parse(reader.GetString(reader.GetOrdinal("ClosureDate"))),
+                CreatedBy = reader.GetString(reader.GetOrdinal("CreatedBy")),
+                CreatedDate = DateTime.Parse(reader.GetString(reader.GetOrdinal("CreatedDate"))),
+                ModifiedBy = reader.IsDBNull(reader.GetOrdinal("ModifiedBy")) ? null : reader.GetString(reader.GetOrdinal("ModifiedBy")),
+                ModifiedDate = reader.IsDBNull(reader.GetOrdinal("ModifiedDate")) ? (DateTime?)null : DateTime.Parse(reader.GetString(reader.GetOrdinal("ModifiedDate"))),
+                DeletedBy = reader.IsDBNull(reader.GetOrdinal("DeletedBy")) ? null : reader.GetString(reader.GetOrdinal("DeletedBy")),
+                DeletedDate = reader.IsDBNull(reader.GetOrdinal("DeletedDate")) ? (DateTime?)null : DateTime.Parse(reader.GetString(reader.GetOrdinal("DeletedDate")))
+            };
+        }
+
+        #endregion
+    }
+}

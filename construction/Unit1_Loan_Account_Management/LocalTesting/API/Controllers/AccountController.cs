@@ -13,6 +13,7 @@ using Microsoft.AspNetCore.Mvc;
 using ManservLoanSystem.LocalTesting.DataAccess;
 using ManservLoanSystem.LocalTesting.Mocks;
 using ManservLoanSystem.Models.Entities;
+using ManservLoanSystem.Models.DTOs;
 
 namespace ManservLoanSystem.LocalTesting.API.Controllers
 {
@@ -418,41 +419,5 @@ namespace ManservLoanSystem.LocalTesting.API.Controllers
                 Currency = account.Currency
             };
         }
-    }
-
-    // Temporary DTO class (should be in Models namespace)
-    public class AccountDTO
-    {
-        public string ReferenceNumber { get; set; }
-        public string PreviousReferenceNumber { get; set; }
-        public string CRIBIDNumber { get; set; }
-        public string CustomerName { get; set; }
-        public string NIDSSAccountNumber { get; set; }
-        public string LongName { get; set; }
-        public string CenterCode { get; set; }
-        public string BudgetUnit { get; set; }
-        public string Corporation { get; set; }
-        public string BookCode { get; set; }
-        public string EconomicActivityCode { get; set; }
-        public DateTime OriginalReleaseDate { get; set; }
-        public DateTime StartOfTerm { get; set; }
-        public DateTime MaturityDate { get; set; }
-        public string AccountType { get; set; }
-        public string Purpose { get; set; }
-        public string FundSource { get; set; }
-        public string LendingProgram { get; set; }
-        public string Area { get; set; }
-        public bool IsRestructured { get; set; }
-        public string TypeOfCredit { get; set; }
-        public string MaturityCode { get; set; }
-        public string PurposeOfCredit { get; set; }
-        public int? NumberOfRecords { get; set; }
-        public bool IsGuaranteed { get; set; }
-        public string GuaranteedBy { get; set; }
-        public bool IsUnderLitigation { get; set; }
-        public DateTime? LitigationDate { get; set; }
-        public string LoanStatus { get; set; }
-        public string LoanProjectType { get; set; }
-        public string Currency { get; set; }
     }
 }

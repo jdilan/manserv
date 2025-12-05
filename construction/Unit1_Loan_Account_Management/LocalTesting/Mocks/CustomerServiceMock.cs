@@ -23,7 +23,7 @@ namespace ManservLoanSystem.LocalTesting.Mocks
     /// </summary>
     public class CustomerServiceMock : ICustomerQueryService
     {
-        private readonly List<CustomerDetails> _customers;
+        private List<CustomerDetails> _customers;
 
         public CustomerServiceMock()
         {

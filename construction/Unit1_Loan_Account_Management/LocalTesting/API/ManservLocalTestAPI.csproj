@@ -1,8 +1,8 @@
 <Project Sdk="Microsoft.NET.Sdk.Web">
 
   <PropertyGroup>
-    <TargetFramework>net6.0</TargetFramework>
-    <Nullable>enable</Nullable>
+    <TargetFramework>net8.0</TargetFramework>
+    <Nullable>disable</Nullable>
     <ImplicitUsings>enable</ImplicitUsings>
     <RootNamespace>ManservLoanSystem.LocalTesting.API</RootNamespace>
   </PropertyGroup>
@@ -16,7 +16,7 @@
     <PackageReference Include="System.Data.SQLite.Core" Version="1.0.118" />
     
     <!-- JSON - Updated to fix security vulnerability -->
-    <PackageReference Include="System.Text.Json" Version="8.0.0" />
+    <PackageReference Include="System.Text.Json" Version="9.0.0" />
   </ItemGroup>
 
   <ItemGroup>

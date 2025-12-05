@@ -23,10 +23,10 @@ namespace ManservLoanSystem.LocalTesting.Mocks
     /// </summary>
     public class ReferenceDataServiceMock : IReferenceDataService, IAccountTypeService, IEconomicActivityService, ICenterService
     {
-        private readonly Dictionary<string, List<ReferenceDataItem>> _referenceData;
-        private readonly List<AccountType> _accountTypes;
-        private readonly List<EconomicActivity> _economicActivities;
-        private readonly List<Center> _centers;
+        private Dictionary<string, List<ReferenceDataItem>> _referenceData;
+        private List<AccountType> _accountTypes;
+        private List<EconomicActivity> _economicActivities;
+        private List<Center> _centers;
 
         public ReferenceDataServiceMock()
         {

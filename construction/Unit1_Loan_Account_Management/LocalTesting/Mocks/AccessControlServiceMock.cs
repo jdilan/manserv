@@ -23,7 +23,7 @@ namespace ManservLoanSystem.LocalTesting.Mocks
     /// </summary>
     public class AccessControlServiceMock : IAccessControlService
     {
-        private readonly Dictionary<string, UserPermissions> _users;
+        private Dictionary<string, UserPermissions> _users;
 
         public AccessControlServiceMock()
         {

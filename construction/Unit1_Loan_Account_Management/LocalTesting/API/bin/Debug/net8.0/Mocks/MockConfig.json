@@ -1,0 +1,54 @@
+{
+  "MockMode": "lenient",
+  "Description": null,
+  "Validation": {
+    "StrictMode": false,
+    "AllowDuplicateRefNo": true,
+    "EnforceAllBusinessRules": false
+  },
+  "Users": [
+    {
+      "UserId": "user1",
+      "Username": "John User",
+      "Role": "User",
+      "Centers": [
+        "01"
+      ],
+      "Description": null
+    },
+    {
+      "UserId": "admin1",
+      "Username": "Admin User",
+      "Role": "Administrator",
+      "Centers": [
+        "01",
+        "02",
+        "03"
+      ],
+      "Description": null
+    }
+  ],
+  "TestScenarios": {
+    "HappyPath": {
+      "Enabled": true,
+      "Description": null
+    },
+    "ValidationFailures": {
+      "Enabled": false,
+      "Description": null
+    },
+    "PermissionDenied": {
+      "Enabled": false,
+      "Description": null
+    },
+    "ExternalServiceFailures": {
+      "Enabled": false,
+      "Description": null
+    }
+  },
+  "Logging": {
+    "LogToConsole": true,
+    "LogToFile": false,
+    "LogLevel": "Info"
+  }
+}
