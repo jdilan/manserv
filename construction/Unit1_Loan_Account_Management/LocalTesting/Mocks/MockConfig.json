@@ -1,0 +1,73 @@
+{
+  "mockMode": "lenient",
+  "description": "Configuration for mock services in local testing environment",
+  
+  "validation": {
+    "strictMode": false,
+    "allowDuplicateRefNo": true,
+    "enforceAllBusinessRules": false
+  },
+  
+  "users": [
+    {
+      "userId": "user1",
+      "username": "John User",
+      "role": "User",
+      "centers": ["01"],
+      "description": "Regular user with limited permissions"
+    },
+    {
+      "userId": "auth1",
+      "username": "Jane Authorizer",
+      "role": "Authorizer",
+      "centers": ["01", "02"],
+      "description": "Authorizer with update permissions"
+    },
+    {
+      "userId": "admin1",
+      "username": "Admin User",
+      "role": "Administrator",
+      "centers": ["01", "02", "03"],
+      "description": "Administrator with full permissions"
+    },
+    {
+      "userId": "restricted1",
+      "username": "Restricted User",
+      "role": "User",
+      "centers": [],
+      "description": "User with no center access (for testing restrictions)"
+    },
+    {
+      "userId": "SYSTEM",
+      "username": "System",
+      "role": "Administrator",
+      "centers": ["01", "02", "03"],
+      "description": "System user with full access"
+    }
+  ],
+  
+  "testScenarios": {
+    "happyPath": {
+      "enabled": true,
+      "description": "All validations pass, all permissions granted"
+    },
+    "validationFailures": {
+      "enabled": false,
+      "description": "Trigger validation errors for testing"
+    },
+    "permissionDenied": {
+      "enabled": false,
+      "description": "Deny permissions for testing access control"
+    },
+    "externalServiceFailures": {
+      "enabled": false,
+      "description": "Simulate external service failures"
+    }
+  },
+  
+  "logging": {
+    "logToConsole": true,
+    "logToFile": false,
+    "logLevel": "Info"
+  }
+}

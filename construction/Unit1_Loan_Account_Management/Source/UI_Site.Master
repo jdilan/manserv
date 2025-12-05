@@ -1,0 +1,100 @@
+<%@ Master Language="C#" AutoEventWireup="true" CodeBehind="Site.master.cs" Inherits="ManservLoanSystem.Web.SiteMaster" %>
+
+<!DOCTYPE html>
+<html lang="en">
+<head runat="server">
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title><%: Page.Title %> - MANSERV Loan Account Management</title>
+
+    <asp:PlaceHolder runat="server">
+        <%: Scripts.Render("~/bundles/modernizr") %>
+    </asp:PlaceHolder>
+
+    <webopt:bundleReference runat="server" path="~/Content/css" />
+    <link href="~/favicon.ico" rel="shortcut icon" type="image/x-icon" />
+
+    <style>
+        /* Simple styling for demo */
+        body { font-family: Arial, sans-serif; margin: 0; padding: 0; }
+        .header { background-color: #003366; color: white; padding: 20px; }
+        .header h1 { margin: 0; font-size: 24px; }
+        .nav { background-color: #004080; padding: 10px; }
+        .nav a { color: white; text-decoration: none; padding: 10px 15px; display: inline-block; }
+        .nav a:hover { background-color: #0059b3; }
+        .container { padding: 20px; max-width: 1200px; margin: 0 auto; }
+        .footer { background-color: #f0f0f0; padding: 20px; text-align: center; margin-top: 40px; }
+        .form-group { margin-bottom: 15px; }
+        .form-group label { display: block; font-weight: bold; margin-bottom: 5px; }
+        .form-group input, .form-group select, .form-group textarea { 
+            width: 100%; padding: 8px; border: 1px solid #ccc; border-radius: 4px; 
+        }
+        .btn { padding: 10px 20px; border: none; border-radius: 4px; cursor: pointer; font-size: 14px; }
+        .btn-primary { background-color: #003366; color: white; }
+        .btn-primary:hover { background-color: #004080; }
+        .btn-secondary { background-color: #6c757d; color: white; margin-left: 10px; }
+        .btn-secondary:hover { background-color: #5a6268; }
+        .btn-danger { background-color: #dc3545; color: white; }
+        .btn-danger:hover { background-color: #c82333; }
+        .alert { padding: 15px; margin-bottom: 20px; border-radius: 4px; }
+        .alert-success { background-color: #d4edda; border: 1px solid #c3e6cb; color: #155724; }
+        .alert-error { background-color: #f8d7da; border: 1px solid #f5c6cb; color: #721c24; }
+        .grid-container { overflow-x: auto; }
+        table { width: 100%; border-collapse: collapse; margin-top: 20px; }
+        table th, table td { padding: 12px; text-align: left; border-bottom: 1px solid #ddd; }
+        table th { background-color: #003366; color: white; }
+        table tr:hover { background-color: #f5f5f5; }
+    </style>
+</head>
+<body>
+    <form runat="server">
+        <asp:ScriptManager runat="server">
+            <Scripts>
+                <%--To learn more about bundling scripts in ScriptManager see https://go.microsoft.com/fwlink/?LinkID=301884 --%>
+                <%--Framework Scripts--%>
+                <asp:ScriptReference Name="MsAjaxBundle" />
+                <asp:ScriptReference Name="jquery" />
+                <asp:ScriptReference Name="bootstrap" />
+                <asp:ScriptReference Name="WebForms.js" Assembly="System.Web" Path="~/Scripts/WebForms/WebForms.js" />
+                <asp:ScriptReference Name="WebUIValidation.js" Assembly="System.Web" Path="~/Scripts/WebForms/WebUIValidation.js" />
+                <asp:ScriptReference Name="MenuStandards.js" Assembly="System.Web" Path="~/Scripts/WebForms/MenuStandards.js" />
+                <asp:ScriptReference Name="GridView.js" Assembly="System.Web" Path="~/Scripts/WebForms/GridView.js" />
+                <asp:ScriptReference Name="DetailsView.js" Assembly="System.Web" Path="~/Scripts/WebForms/DetailsView.js" />
+                <asp:ScriptReference Name="TreeView.js" Assembly="System.Web" Path="~/Scripts/WebForms/TreeView.js" />
+                <asp:ScriptReference Name="WebParts.js" Assembly="System.Web" Path="~/Scripts/WebForms/WebParts.js" />
+                <asp:ScriptReference Name="Focus.js" Assembly="System.Web" Path="~/Scripts/WebForms/Focus.js" />
+                <asp:ScriptReference Name="WebFormsBundle" />
+                <%--Site Scripts--%>
+            </Scripts>
+        </asp:ScriptManager>
+
+        <!-- Header -->
+        <div class="header">
+            <h1>🏦 MANSERV Loan Account Management System</h1>
+            <p style="margin: 5px 0 0 0; font-size: 14px;">Unit 1: Loan Account Management</p>
+        </div>
+
+        <!-- Navigation -->
+        <div class="nav">
+            <a href="~/Default.aspx" runat="server">🏠 Home</a>
+            <a href="~/Features/GeneralAccountManagement/CreateAccount.aspx" runat="server">➕ Create Account</a>
+            <a href="~/Features/AccountOperations/SearchAccounts.aspx" runat="server">🔍 Search Accounts</a>
+            <a href="~/Features/GeneralAccountManagement/ViewAccount.aspx" runat="server">👁️ View Account</a>
+        </div>
+
+        <!-- Main Content -->
+        <div class="container">
+            <asp:ContentPlaceHolder ID="MainContent" runat="server">
+            </asp:ContentPlaceHolder>
+        </div>
+
+        <!-- Footer -->
+        <div class="footer">
+            <p>&copy; <%: DateTime.Now.Year %> - MANSERV Loan Account Management System</p>
+            <p style="font-size: 12px; color: #666;">
+                ASP.NET 4.7 | Entity Framework 6.x | SQL Server 2022 | Version 1.0
+            </p>
+        </div>
+    </form>
+</body>
+</html>

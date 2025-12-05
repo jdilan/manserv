@@ -1,0 +1,36 @@
+{
+  "apiServer": {
+    "baseUrl": "http://localhost:5000",
+    "port": 5000,
+    "enableSwagger": true,
+    "enableCors": true
+  },
+  "database": {
+    "type": "SQLite",
+    "connectionString": "Data Source=manserv_test.db;Version=3;",
+    "autoInitialize": true,
+    "schemaFile": "Database/SQLite_Schema.sql",
+    "sampleDataFile": "Database/SQLite_SampleData.sql"
+  },
+  "mockServices": {
+    "enabled": true,
+    "mode": "lenient",
+    "configFile": "Mocks/MockConfig.json"
+  },
+  "logging": {
+    "logRequests": true,
+    "logToConsole": true,
+    "logToFile": false,
+    "logLevel": "Information"
+  },
+  "testUI": {
+    "enabled": true,
+    "path": "TestUI/index.html",
+    "defaultUserId": "admin1"
+  },
+  "features": {
+    "enableAuditTrail": true,
+    "enableValidation": true,
+    "enableAccessControl": true
+  }
+}

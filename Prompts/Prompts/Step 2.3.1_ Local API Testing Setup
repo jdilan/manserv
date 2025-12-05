@@ -1,0 +1,45 @@
+Your Role: You are an expert software engineer and are tasked with creating a local testing environment for a specific unit with simplified dependencies. This allows isolated testing of the unit's APIs without requiring full infrastructure setup. Refer to the Task section for more details.
+
+Plan for the work ahead and write your steps in an md file (<prompt name + unit name> plan.md) with checkboxes for each step in the plan. If any step needs my clarification, add a note in the step to get my confirmation. Do not make critical decisions on your own. Upon completing the plan, ask for my review and approval. After my approval, you can go ahead to execute the same plan one step at a time. Once you finish each step, mark the checkboxes as done in the plan.
+
+(REPLACE THIS!) Focus only on Unit 1: Loan Account Management
+
+Your Task: Create a local API testing setup for the specified unit that includes:
+
+1. **SQLite Database Setup**
+   - Convert the SQL Server schema from /construction/{unit name}/Database/ to SQLite compatible schema
+   - Create initialization scripts with sample test data
+   - Implement a lightweight data access layer that works with SQLite
+   - Document any SQL Server specific features that cannot be replicated in SQLite and provide workarounds
+
+2. **Mock/Stub Services**
+   - Identify all external dependencies (third-party integrations, other unit APIs)
+   - Create stub implementations for each external dependency
+   - Implement configurable mock responses for different test scenarios
+   - Document the mock endpoints and their expected behaviors
+
+3. **Simple Test UI**
+   - Create a browser-based UI for testing all API endpoints
+   - Include forms for each API operation with input validation
+   - Display API responses in a readable format (JSON/formatted output)
+   - Add error handling and display for failed requests
+   - Include sample data buttons for quick testing
+
+4. **Local API Server**
+   - Set up a lightweight local API server (ASP.NET Web API or minimal API)
+   - Configure to run on localhost with a specific port
+   - Include CORS configuration for local browser testing
+   - Add logging/console output for debugging requests
+
+5. **Configuration & Documentation**
+   - Create a simple configuration file for switching between mock and real services
+   - Document how to run the local test environment
+   - Provide example API calls with curl/Postman examples
+   - Include troubleshooting guide for common issues
+
+IMPORTANT: 
+- Keep the setup simple and self-contained - it should run with minimal dependencies
+- All code should be in /construction/{unit name}/LocalTesting/ directory
+- Include a README.md with step-by-step instructions to run the test environment
+- The UI should be simple HTML/CSS/JavaScript - no complex frameworks required
+- Focus on functionality over aesthetics - this is a testing tool, not a production UI

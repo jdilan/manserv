@@ -1,0 +1,374 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>MANSERV Local Test UI - Unit 1</title>
+    <link rel="stylesheet" href="css/styles.css">
+</head>
+<body>
+    <div class="container">
+        <!-- Header -->
+        <header>
+            <h1>🏦 MANSERV Local Test UI</h1>
+            <p>Unit 1: Loan Account Management - API Testing Interface</p>
+            <div class="api-status">
+                <span id="apiStatus">Checking API...</span>
+                <button onclick="checkApiHealth()">Refresh Status</button>
+            </div>
+        </header>
+
+        <!-- Navigation Tabs -->
+        <nav class="tabs">
+            <button class="tab-button active" onclick="showTab('search')">🔍 Search</button>
+            <button class="tab-button" onclick="showTab('create')">➕ Create</button>
+            <button class="tab-button" onclick="showTab('view')">👁️ View</button>
+            <button class="tab-button" onclick="showTab('update')">✏️ Update</button>
+            <button class="tab-button" onclick="showTab('delete')">🗑️ Delete</button>
+            <button class="tab-button" onclick="showTab('reference')">📚 Reference Data</button>
+        </nav>
+
+        <!-- Search Tab -->
+        <div id="search-tab" class="tab-content active">
+            <h2>Search Accounts</h2>
+            <form id="searchForm" onsubmit="searchAccounts(event)">
+                <div class="form-row">
+                    <div class="form-group">
+                        <label>Reference Number:</label>
+                        <input type="text" id="search_refNo" placeholder="LA-2025-0001">
+                    </div>
+                    <div class="form-group">
+                        <label>Customer Name:</label>
+                        <input type="text" id="search_customerName" placeholder="Juan Dela Cruz">
+                    </div>
+                </div>
+                <div class="form-row">
+                    <div class="form-group">
+                        <label>Center Code:</label>
+                        <input type="text" id="search_centerCode" placeholder="01">
+                    </div>
+                    <div class="form-group">
+                        <label>Status:</label>
+                        <select id="search_status">
+                            <option value="">All</option>
+                            <option value="Active">Active</option>
+                            <option value="Closed">Closed</option>
+                            <option value="Archived">Archived</option>
+                            <option value="Deleted">Deleted</option>
+                        </select>
+                    </div>
+                </div>
+                <div class="form-actions">
+                    <button type="submit" class="btn-primary">Search</button>
+                    <button type="button" onclick="clearSearch()">Clear</button>
+                    <button type="button" onclick="getAllAccounts()">Get All</button>
+                </div>
+            </form>
+
+            <div id="searchResults" class="results-container"></div>
+        </div>
+
+        <!-- Create Tab -->
+        <div id="create-tab" class="tab-content">
+            <h2>Create New Account</h2>
+            <div class="form-actions" style="margin-bottom: 20px;">
+                <button onclick="loadSampleData('create')">Load Sample Data</button>
+                <button onclick="clearForm('createForm')">Clear Form</button>
+            </div>
+            <form id="createForm" onsubmit="createAccount(event)">
+                <!-- General Information -->
+                <fieldset>
+                    <legend>General Information</legend>
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label>Reference Number: *</label>
+                            <input type="text" id="create_refNo" required maxlength="17">
+                        </div>
+                        <div class="form-group">
+                            <label>Previous Reference Number: *</label>
+                            <input type="text" id="create_prevRefNo" required maxlength="17">
+                        </div>
+                    </div>
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label>Customer Name: *</label>
+                            <input type="text" id="create_customerName" required maxlength="40">
+                        </div>
+                        <div class="form-group">
+                            <label>Long Name: *</label>
+                            <input type="text" id="create_longName" required maxlength="100">
+                        </div>
+                    </div>
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label>CRIB ID Number:</label>
+                            <input type="text" id="create_cribId" maxlength="10">
+                        </div>
+                        <div class="form-group">
+                            <label>NIDSS Account Number:</label>
+                            <input type="text" id="create_nidss" maxlength="13">
+                        </div>
+                    </div>
+                </fieldset>
+
+                <!-- Account Identification -->
+                <fieldset>
+                    <legend>Account Identification</legend>
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label>Center Code: *</label>
+                            <select id="create_centerCode" required></select>
+                        </div>
+                        <div class="form-group">
+                            <label>Budget Unit: *</label>
+                            <select id="create_budgetUnit" required></select>
+                        </div>
+                    </div>
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label>Corporation: *</label>
+                            <select id="create_corporation" required></select>
+                        </div>
+                        <div class="form-group">
+                            <label>Book Code: *</label>
+                            <select id="create_bookCode" required></select>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label>Economic Activity Code: *</label>
+                        <select id="create_economicActivity" required></select>
+                    </div>
+                </fieldset>
+
+                <!-- Loan Dates -->
+                <fieldset>
+                    <legend>Loan Dates</legend>
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label>Original Release Date: *</label>
+                            <input type="date" id="create_originalReleaseDate" required>
+                        </div>
+                        <div class="form-group">
+                            <label>Start of Term: *</label>
+                            <input type="date" id="create_startOfTerm" required>
+                        </div>
+                        <div class="form-group">
+                            <label>Maturity Date: *</label>
+                            <input type="date" id="create_maturityDate" required>
+                        </div>
+                    </div>
+                </fieldset>
+
+                <!-- Account Type and Funding -->
+                <fieldset>
+                    <legend>Account Type and Funding</legend>
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label>Account Type: *</label>
+                            <select id="create_accountType" required onchange="togglePurposeField('create')"></select>
+                        </div>
+                        <div class="form-group">
+                            <label>Purpose:</label>
+                            <input type="text" id="create_purpose" maxlength="1">
+                        </div>
+                    </div>
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label>Fund Source: *</label>
+                            <select id="create_fundSource" required></select>
+                        </div>
+                        <div class="form-group">
+                            <label>Lending Program: *</label>
+                            <select id="create_lendingProgram" required></select>
+                        </div>
+                        <div class="form-group">
+                            <label>Area: *</label>
+                            <select id="create_area" required></select>
+                        </div>
+                    </div>
+                </fieldset>
+
+                <!-- Loan Classification -->
+                <fieldset>
+                    <legend>Loan Classification</legend>
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label>
+                                <input type="checkbox" id="create_isRestructured">
+                                Is Restructured
+                            </label>
+                        </div>
+                        <div class="form-group">
+                            <label>Type of Credit: *</label>
+                            <input type="text" id="create_typeOfCredit" required value="CUR" maxlength="6">
+                        </div>
+                        <div class="form-group">
+                            <label>Maturity Code: *</label>
+                            <select id="create_maturityCode" required></select>
+                        </div>
+                    </div>
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label>Purpose of Credit: *</label>
+                            <input type="text" id="create_purposeOfCredit" required value="P" maxlength="1">
+                        </div>
+                        <div class="form-group">
+                            <label>Number of Records:</label>
+                            <input type="number" id="create_numberOfRecords" value="1">
+                        </div>
+                    </div>
+                </fieldset>
+
+                <!-- Guarantee and Litigation -->
+                <fieldset>
+                    <legend>Guarantee and Litigation</legend>
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label>
+                                <input type="checkbox" id="create_isGuaranteed" onchange="toggleGuaranteedBy('create')">
+                                Is Guaranteed
+                            </label>
+                        </div>
+                        <div class="form-group">
+                            <label>Guaranteed By:</label>
+                            <select id="create_guaranteedBy" disabled></select>
+                        </div>
+                    </div>
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label>
+                                <input type="checkbox" id="create_isUnderLitigation" onchange="toggleLitigationDate('create')">
+                                Is Under Litigation
+                            </label>
+                        </div>
+                        <div class="form-group">
+                            <label>Litigation Date:</label>
+                            <input type="date" id="create_litigationDate" disabled>
+                        </div>
+                    </div>
+                </fieldset>
+
+                <!-- Loan Status and Currency -->
+                <fieldset>
+                    <legend>Loan Status and Currency</legend>
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label>Loan Status: *</label>
+                            <select id="create_loanStatus" required>
+                                <option value="CUR">CUR - Current</option>
+                                <option value="PDO">PDO - Past Due</option>
+                            </select>
+                        </div>
+                        <div class="form-group">
+                            <label>Loan Project Type: *</label>
+                            <select id="create_loanProjectType" required>
+                                <option value="C">C - Commercial</option>
+                                <option value="D">D - Developmental</option>
+                            </select>
+                        </div>
+                        <div class="form-group">
+                            <label>Currency: *</label>
+                            <select id="create_currency" required></select>
+                        </div>
+                    </div>
+                </fieldset>
+
+                <div class="form-actions">
+                    <button type="submit" class="btn-primary">Create Account</button>
+                    <button type="button" onclick="clearForm('createForm')">Clear</button>
+                </div>
+            </form>
+        </div>
+
+        <!-- View Tab -->
+        <div id="view-tab" class="tab-content">
+            <h2>View Account</h2>
+            <div class="form-row">
+                <div class="form-group">
+                    <label>Account ID or Reference Number:</label>
+                    <input type="text" id="view_identifier" placeholder="1 or LA-2025-0001">
+                </div>
+                <button onclick="viewAccount()">View</button>
+            </div>
+            <div id="viewResults" class="results-container"></div>
+        </div>
+
+        <!-- Update Tab -->
+        <div id="update-tab" class="tab-content">
+            <h2>Update Account</h2>
+            <p>First, load an account to update:</p>
+            <div class="form-row">
+                <div class="form-group">
+                    <label>Account ID:</label>
+                    <input type="number" id="update_accountId" placeholder="1">
+                </div>
+                <button onclick="loadAccountForUpdate()">Load Account</button>
+            </div>
+            <div id="updateFormContainer"></div>
+        </div>
+
+        <!-- Delete Tab -->
+        <div id="delete-tab" class="tab-content">
+            <h2>Delete Account</h2>
+            <p class="warning">⚠️ This will perform a soft delete (mark as deleted)</p>
+            <div class="form-row">
+                <div class="form-group">
+                    <label>Account ID:</label>
+                    <input type="number" id="delete_accountId" placeholder="1">
+                </div>
+                <button onclick="deleteAccount()" class="btn-danger">Delete</button>
+            </div>
+            <div id="deleteResults" class="results-container"></div>
+        </div>
+
+        <!-- Reference Data Tab -->
+        <div id="reference-tab" class="tab-content">
+            <h2>Reference Data</h2>
+            <div class="form-row">
+                <div class="form-group">
+                    <label>Select Data Type:</label>
+                    <select id="refDataType" onchange="loadReferenceData()">
+                        <option value="">-- Select --</option>
+                        <option value="CORPORATION">Corporations</option>
+                        <option value="BOOKCODE">Book Codes</option>
+                        <option value="FUNDSOURCE">Fund Sources</option>
+                        <option value="LENDINGPROGRAM">Lending Programs</option>
+                        <option value="AREA">Areas</option>
+                        <option value="MATURITYCODE">Maturity Codes</option>
+                        <option value="GUARANTEEDBY">Guaranteed By</option>
+                        <option value="CURRENCY">Currencies</option>
+                        <option value="account-types">Account Types</option>
+                        <option value="economic-activities">Economic Activities</option>
+                        <option value="centers">Centers</option>
+                        <option value="customers">Customers</option>
+                    </select>
+                </div>
+            </div>
+            <div id="refDataResults" class="results-container"></div>
+        </div>
+
+        <!-- Response Viewer -->
+        <div id="responseViewer" class="response-viewer">
+            <h3>API Response</h3>
+            <div class="response-header">
+                <span id="responseStatus"></span>
+                <button onclick="copyResponse()">Copy</button>
+                <button onclick="clearResponse()">Clear</button>
+            </div>
+            <pre id="responseBody"></pre>
+        </div>
+    </div>
+
+    <!-- Scripts -->
+    <script src="js/api-client.js"></script>
+    <script src="js/sample-data.js"></script>
+    <script src="js/response-viewer.js"></script>
+    <script>
+        // Initialize on page load
+        window.onload = function() {
+            checkApiHealth();
+            loadDropdowns();
+        };
+    </script>
+</body>
+</html>

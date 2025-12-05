@@ -1,0 +1,38 @@
+<Project Sdk="Microsoft.NET.Sdk.Web">
+
+  <PropertyGroup>
+    <TargetFramework>net6.0</TargetFramework>
+    <Nullable>enable</Nullable>
+    <ImplicitUsings>enable</ImplicitUsings>
+    <RootNamespace>ManservLoanSystem.LocalTesting.API</RootNamespace>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <!-- ASP.NET Core - Compatible with .NET 6.0 -->
+    <PackageReference Include="Swashbuckle.AspNetCore" Version="6.5.0" />
+    
+    <!-- SQLite -->
+    <PackageReference Include="System.Data.SQLite" Version="1.0.118" />
+    <PackageReference Include="System.Data.SQLite.Core" Version="1.0.118" />
+    
+    <!-- JSON - Updated to fix security vulnerability -->
+    <PackageReference Include="System.Text.Json" Version="8.0.0" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <!-- Include mock services and data access -->
+    <Compile Include="..\Mocks\*.cs" />
+    <Compile Include="..\DataAccess\*.cs" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <!-- Copy SQLite database files to output -->
+    <None Update="..\Database\*.sql">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Update="..\Mocks\MockConfig.json">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+  </ItemGroup>
+
+</Project>

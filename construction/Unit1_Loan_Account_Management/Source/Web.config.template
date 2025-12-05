@@ -1,0 +1,221 @@
+<!--
+================================================================================
+MANSERV Loan Account Management System
+Web.config Template
+================================================================================
+Purpose: Configuration template for ASP.NET 4.7 Web Forms application
+Target: SQL Server 2022
+Author: System Generated
+Date: December 5, 2025
+
+INSTRUCTIONS:
+1. Copy this file to your Web Forms project root
+2. Rename to Web.config
+3. Update connection string with your SQL Server details
+4. Adjust settings as needed for your environment
+================================================================================
+-->
+<?xml version="1.0" encoding="utf-8"?>
+<configuration>
+  <configSections>
+    <!-- Entity Framework 6.x configuration section -->
+    <section name="entityFramework" type="System.Data.Entity.Internal.ConfigFile.EntityFrameworkSection, EntityFramework, Version=6.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089" requirePermission="false" />
+  </configSections>
+
+  <!-- 
+  ================================================================================
+  CONNECTION STRINGS - SQL SERVER 2022
+  ================================================================================
+  Choose ONE of the following connection strings based on your environment
+  -->
+  <connectionStrings>
+    <!-- DEVELOPMENT - Windows Authentication (Recommended for local development) -->
+    <add name="ManservLoanDB" 
+         connectionString="Data Source=localhost;Initial Catalog=ManservLoanDB;Integrated Security=True;TrustServerCertificate=True;Application Name=ManservLoanSystem;MultipleActiveResultSets=True" 
+         providerName="System.Data.SqlClient" />
+
+    <!-- DEVELOPMENT - SQL Authentication (Alternative) -->
+    <!--
+    <add name="ManservLoanDB" 
+         connectionString="Data Source=localhost;Initial Catalog=ManservLoanDB;User ID=manserv_user;Password=YourPassword;TrustServerCertificate=True;Application Name=ManservLoanSystem;MultipleActiveResultSets=True" 
+         providerName="System.Data.SqlClient" />
+    -->
+
+    <!-- PRODUCTION - Encrypted Connection (Use in production) -->
+    <!--
+    <add name="ManservLoanDB" 
+         connectionString="Data Source=production-server;Initial Catalog=ManservLoanDB;User ID=manserv_app;Password=YourSecurePassword;Encrypt=True;TrustServerCertificate=False;Application Name=ManservLoanSystem;MultipleActiveResultSets=True;Min Pool Size=5;Max Pool Size=100" 
+         providerName="System.Data.SqlClient" />
+    -->
+  </connectionStrings>
+
+  <!--
+  ================================================================================
+  APP SETTINGS
+  ================================================================================
+  -->
+  <appSettings>
+    <add key="webpages:Version" value="3.0.0.0" />
+    <add key="webpages:Enabled" value="false" />
+    <add key="ClientValidationEnabled" value="true" />
+    <add key="UnobtrusiveJavaScriptEnabled" value="true" />
+    
+    <!-- Application-specific settings -->
+    <add key="ApplicationName" value="MANSERV Loan Account Management" />
+    <add key="ApplicationVersion" value="1.0" />
+    <add key="EnableDetailedErrors" value="true" /> <!-- Set to false in production -->
+  </appSettings>
+
+  <!--
+  ================================================================================
+  SYSTEM.WEB - ASP.NET Configuration
+  ================================================================================
+  -->
+  <system.web>
+    <!-- Compilation settings -->
+    <compilation debug="true" targetFramework="4.7.2" />
+    
+    <!-- HTTP Runtime settings -->
+    <httpRuntime targetFramework="4.7.2" maxRequestLength="10240" executionTimeout="300" />
+
+    <!-- Authentication - Forms Authentication -->
+    <authentication mode="Forms">
+      <forms loginUrl="~/Login.aspx" timeout="60" slidingExpiration="true" />
+    </authentication>
+
+    <!-- Authorization - Allow all for now, restrict specific pages as needed -->
+    <authorization>
+      <allow users="*" />
+    </authorization>
+
+    <!-- Session State -->
+    <sessionState mode="InProc" timeout="60" />
+
+    <!-- Custom Errors - Show detailed errors in development -->
+    <customErrors mode="Off" defaultRedirect="~/Error.aspx">
+      <error statusCode="404" redirect="~/NotFound.aspx" />
+      <error statusCode="500" redirect="~/Error.aspx" />
+    </customErrors>
+
+    <!-- Pages configuration -->
+    <pages controlRenderingCompatibilityVersion="4.0">
+      <namespaces>
+        <add namespace="System.Web.Optimization" />
+      </namespaces>
+      <controls>
+        <add assembly="Microsoft.AspNet.Web.Optimization.WebForms" namespace="Microsoft.AspNet.Web.Optimization.WebForms" tagPrefix="webopt" />
+      </controls>
+    </pages>
+  </system.web>
+
+  <!--
+  ================================================================================
+  ENTITY FRAMEWORK 6.X CONFIGURATION
+  ================================================================================
+  -->
+  <entityFramework>
+    <defaultConnectionFactory type="System.Data.Entity.Infrastructure.SqlConnectionFactory, EntityFramework" />
+    <providers>
+      <provider invariantName="System.Data.SqlClient" type="System.Data.Entity.SqlServer.SqlProviderServices, EntityFramework.SqlServer" />
+    </providers>
+  </entityFramework>
+
+  <!--
+  ================================================================================
+  SYSTEM.WEBSERVER - IIS Configuration
+  ================================================================================
+  -->
+  <system.webServer>
+    <!-- URL Rewrite rules (optional) -->
+    <modules runAllManagedModulesForAllRequests="true" />
+    
+    <!-- Static content caching -->
+    <staticContent>
+      <clientCache cacheControlMode="UseMaxAge" cacheControlMaxAge="7.00:00:00" />
+    </staticContent>
+
+    <!-- Error pages -->
+    <httpErrors errorMode="Detailed" />
+
+    <!-- Security headers (recommended for production) -->
+    <httpProtocol>
+      <customHeaders>
+        <add name="X-Content-Type-Options" value="nosniff" />
+        <add name="X-Frame-Options" value="SAMEORIGIN" />
+        <add name="X-XSS-Protection" value="1; mode=block" />
+      </customHeaders>
+    </httpProtocol>
+  </system.webServer>
+
+  <!--
+  ================================================================================
+  RUNTIME - Assembly Binding Redirects
+  ================================================================================
+  -->
+  <runtime>
+    <assemblyBinding xmlns="urn:schemas-microsoft-com:asm.v1">
+      <dependentAssembly>
+        <assemblyIdentity name="EntityFramework" publicKeyToken="b77a5c561934e089" culture="neutral" />
+        <bindingRedirect oldVersion="0.0.0.0-6.0.0.0" newVersion="6.0.0.0" />
+      </dependentAssembly>
+    </assemblyBinding>
+  </runtime>
+
+  <!--
+  ================================================================================
+  SYSTEM.CODEDOM - C# Compiler Configuration
+  ================================================================================
+  -->
+  <system.codedom>
+    <compilers>
+      <compiler language="c#;cs;csharp" extension=".cs" 
+                type="Microsoft.CodeDom.Providers.DotNetCompilerPlatform.CSharpCodeProvider, Microsoft.CodeDom.Providers.DotNetCompilerPlatform, Version=2.0.1.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35" 
+                warningLevel="4" compilerOptions="/langversion:default /nowarn:1659;1699;1701" />
+    </compilers>
+  </system.codedom>
+</configuration>
+
+<!--
+================================================================================
+PRODUCTION DEPLOYMENT NOTES
+================================================================================
+
+1. CONNECTION STRING ENCRYPTION:
+   Encrypt connection strings in production using aspnet_regiis.exe:
+   
+   aspnet_regiis -pef "connectionStrings" "C:\inetpub\wwwroot\ManservLoanSystem" -prov "RsaProtectedConfigurationProvider"
+
+2. SECURITY SETTINGS:
+   - Set customErrors mode="On" or "RemoteOnly"
+   - Set compilation debug="false"
+   - Use strong passwords for SQL Authentication
+   - Enable SSL/TLS (Encrypt=True in connection string)
+   - Review and restrict authorization rules
+
+3. PERFORMANCE SETTINGS:
+   - Configure connection pooling (Min Pool Size, Max Pool Size)
+   - Enable output caching where appropriate
+   - Configure session state for web farm (StateServer or SQLServer mode)
+   - Enable static content compression
+
+4. IIS CONFIGURATION:
+   - Application Pool: .NET CLR Version 4.0, Integrated Pipeline
+   - Identity: ApplicationPoolIdentity or custom service account
+   - Enable 32-bit applications: False (for 64-bit servers)
+   - Recycling: Configure based on memory and time limits
+
+5. SQL SERVER 2022 SPECIFIC:
+   - Ensure SQL Server 2022 is installed and running
+   - Grant appropriate permissions to application user
+   - Configure firewall to allow SQL Server port (1433)
+   - Enable SQL Server authentication if using SQL Auth
+   - Configure backup and maintenance plans
+
+6. MONITORING:
+   - Enable application logging (log4net or NLog)
+   - Configure health monitoring
+   - Set up performance counters
+   - Monitor database performance
+
+================================================================================
+-->
