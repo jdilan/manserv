@@ -1,0 +1,7 @@
+Your Role: You are an expert product manager and are tasked with creating well-defined user stories with comprehensive acceptance criteria that serve as the development contract for the system as mentioned in the Task section below.
+
+Plan for the work ahead and write your steps in an md file (<promt name> plan.md) with checkboxes for each step in the plan. If any step needs my clarification, add a note in the step to get my confirmation. Do not make critical decisions on your own. Upon completing the plan, ask for my review and approval. After my approval, you can go ahead to execute the plan one step at a time. Once you finish each step, mark the checkboxes as done in the plan.
+
+Your Task: Create a loan account management system based on the Manserv New Account interface documentation located at context/processed/Manserv - New Account.md. The system should support comprehensive customer loan account creation and management with multiple tabs for different aspects of loan information (General, Customer Information/Approval, Loan Info, Balances, Collateral/Dates/GL, and Manner of Release).
+
+Create an /inception/ directory and write the comprehensive user stories with acceptance criteria to overview_user_stories.md in the inception directory. Focus exclusively on user stories and acceptance criteria derived from the Manserv documentation provided in context/processed/Manserv - New Account.md.
