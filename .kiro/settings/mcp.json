@@ -6,7 +6,7 @@
                 "mcp-server-fetch"
             ],
             "env": {},
-            "disabled": true,
+            "disabled": false,
             "autoApprove": []
         },
         "document-loader": {
@@ -17,7 +17,7 @@
             "env": {
                 "FASTMCP_LOG_LEVEL": "ERROR"
             },
-            "disabled": true,
+            "disabled": false,
             "autoApprove": []
         }
     }

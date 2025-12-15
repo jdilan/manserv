@@ -13,7 +13,7 @@ using System.Reflection;
 [assembly: System.Reflection.AssemblyCompanyAttribute("ManservLocalTestAPI")]
 [assembly: System.Reflection.AssemblyConfigurationAttribute("Debug")]
 [assembly: System.Reflection.AssemblyFileVersionAttribute("1.0.0.0")]
-[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+47d9f21f622b5e3608ec92207c6bf85817f7cd06")]
+[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+0ee78c5c4a036a4692630b0061495fdfd0348f63")]
 [assembly: System.Reflection.AssemblyProductAttribute("ManservLocalTestAPI")]
 [assembly: System.Reflection.AssemblyTitleAttribute("ManservLocalTestAPI")]
 [assembly: System.Reflection.AssemblyVersionAttribute("1.0.0.0")]

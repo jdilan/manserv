@@ -5,20 +5,7 @@
 This document describes the New Account Sub-menu interface and its associated fields for managing customer loan accounts in the Manserv system.
 
 **Figure 3 - New Account Sub-menu**
-
-*Screenshot of the Manserv New Account Sub-menu interface. The screen displays a form-based data entry interface with the following visible elements:*
-
-*- **Title Bar**: "New Account" heading at the top of the window*
-*- **GENERAL Section**: Contains six primary input fields arranged vertically:*
-  *- Ref. No (Reference Number) - Text input field for customer loan account identifier (Manserv.cus_bno)*
-  *- Prev. Ref. No. - Text input field for previous loan account reference (Manserv.pvrefno)*
-  *- CRIB ID No. - Text input field for Credit Information Builders ID (Manserv.Cribidno)*
-  *- Customer Name - Text input field for borrower name (Manserv.cus_name)*
-  *- NIDSS Account No. - Text input field for NIDSS Account Number (Manserv.cus_nidsid)*
-  *- Long Name - Extended text input field for full customer name (Manserv.Longname)*
-*- **Tab Navigation**: Multiple tabs visible at the bottom or side of the form including "Customer Information/Approval", "Loan Info", "Balances", "Collateral/Dates/GL", and "Manner of Release"*
-*- **Action Buttons**: Standard form buttons likely including Save, Cancel, Close, or similar navigation controls*
-*- The interface follows a typical database form layout with labels on the left and input fields on the right, using a Windows-style GUI design pattern common in legacy banking systems.*
+*[Image shows the New Account sub-menu interface with various input fields and tabs]*
 
 ## GENERAL Section
 
@@ -36,46 +23,7 @@ The following are the fields on the screen:
 ## Customer Information / Approval Tab
 
 **Figure 4 - Customer Information/ Approval Tab**
-
-*Screenshot of the Customer Information/Approval tab within the New Account interface. This tab is divided into two main sections:*
-
-*- **Customer Information Section** (Upper portion):*
-  *- Business/Residence Address - Multi-line text area for customer address (Manserv.cus_baddr)*
-  *- Project Address - Multi-line text area for project location (Manserv.cus_paddr)*
-  *- Pref. Mailing Address - Radio button or dropdown to select between Business/Residence or Project (Manserv.cus_mail)*
-  *- Affiliate - Dropdown list for selecting customer affiliate (Manserv.cus_affil)*
-  *- Location - Dropdown for municipalities and provinces (Manserv.location)*
-  *- Type of Borrower - Dropdown for borrower classification (Manserv.cus_ownr)*
-  *- New Type of Borrower - Dropdown for new borrower classification (Manserv.cus_borr)*
-  *- LGU Salary Loan - Y/N indicator checkbox or dropdown (Manserv.cnt_lguss)*
-  *- RDO - Dropdown for Revenue District Office (Manserv.cus_rdo)*
-  *- TIN - Text input for Tax Identification Number (Manserv.cus_tin)*
-  *- V/N - Dropdown or radio button for VATable/Non-Vat selection (Manserv.cus_vat)*
-  *- Sex - Dropdown with options: Male, Female, N/A (Manserv.cus_sex)*
-  *- OFW - Y/N indicator for Overseas Foreign Workers (Manserv.cnt_ofw)*
-  *- No. of OFW - Numeric input field, enabled when OFW is Y (Manserv.cnt_ofwn)*
-  *- Group Name - Dropdown for group selection (Manserv.cus_grpnm)*
-  *- Nationality - Dropdown for nationality selection (Manserv.cus_nation)*
-
-*- **Approval Section** (Lower portion):*
-  *- DOSRI - Dropdown for borrower's position in bank (Manserv.cus_dosri)*
-  *- Size of Firm - Dropdown for asset size classification (Manserv.cus_size)*
-  *- Sulong - Y/N checkbox indicator (Manserv.cnt_sulong)*
-  *- BMBE - Y/N checkbox indicator (Manserv.cnt_bmbe)*
-  *- BRR/CAMP - Dropdown for Branch Risk Rating (Manserv.cus_brr)*
-  *- Worksheet Date - Date picker for borrower date (Manserv.cus_brrwdt)*
-  *- Account Class - Dropdown for account classification (Manserv.Cnt_aclass)*
-  *- Account Tag - Dropdown for interest classification A/AA/AAA/AAAA (Manserv.cnt_atag)*
-  *- Total Assets - Numeric input field with currency formatting (Manserv.totasset)*
-  *- Total Liabilities - Numeric input field with currency formatting (Manserv.totliabs)*
-  *- Stockholder Equity - Numeric input field with currency formatting (Manserv.stckhleq)*
-  *- Gross Revenue - Numeric input field with currency formatting (Manserv.grossrev)*
-  *- Total Expenses - Numeric input field with currency formatting (Manserv.Totexpns)*
-  *- Interest Expense - Numeric input field with currency formatting (Manserv.Intexpns)*
-  *- Net Inc/Loss - Numeric input field with currency formatting (Manserv.Netincom)*
-  *- Date audited - Date picker field (Manserv.)*
-
-*The form uses a grid layout with field labels aligned to the left and input controls to the right. Fields marked as mandatory are likely indicated with asterisks or different coloring. The interface maintains consistency with standard Windows form design patterns.*
+*[Image shows the Customer Information and Approval tab interface with multiple input fields organized in sections]*
 
 ### Customer Information
 
@@ -122,40 +70,7 @@ The following are the fields on the screen:
 ## Loan Info Tab
 
 **Figure 5 - Loan Info Tab**
-
-*Screenshot of the Loan Info tab displaying comprehensive loan account details. The form contains the following fields arranged in a structured layout:*
-
-*- **Account Identification Fields** (Top section):*
-  *- Center Code - Text input for customer loan account identifier*
-  *- Budget Unit - Text input for corresponding budget unit*
-  *- Corporation - Dropdown with options: Retail, Foreign Currency, Foreign Currency Wholesale, Wholesale*
-  *- Book Code - Dropdown for book type: Peso Regular Accounts, Foreign Regular Account, FCDU Accounts, Foreign Office Accounts, Trust Deposit Acct – Peso Acct, Trust Deposit Acct – FCDU Acct*
-
-*- **Loan Classification Fields** (Middle section):*
-  *- Economic Activity - Dropdown for major industry classification*
-  *- Orig Release Date - Date picker for first release value date*
-  *- Start of Term - Date picker for amortization period start*
-  *- Maturity Date - Date picker for loan repayment end date*
-  *- Account Type - Dropdown for account classification (Agri, REL, IND)*
-  *- Purpose - Dropdown for loan proceeds usage (mandatory for AA, AI, R, RDC, RDE, RDH account types)*
-  *- Fund Source - Dropdown for funder name selection*
-  *- Lending Program - Dropdown for program type*
-  *- Area - Dropdown for program lending type (Performing/Non-performing)*
-
-*- **Loan Status Fields** (Lower section):*
-  *- Restructured - Y/N indicator checkbox*
-  *- Type of Credit - Auto-populated dropdown based on account type and status (CUR, PDO, LITIG)*
-  *- Maturity Code - Dropdown for loan term period*
-  *- Purpose of Credit - Auto-populated based on account type*
-  *- No. of Record - Numeric input for record count*
-  *- Guaranteed - Y/N indicator checkbox*
-  *- Guaranteed By - Dropdown field (enabled when Guaranteed = Y)*
-  *- Under Litig - Y/N indicator for litigation status*
-  *- Loan Status - Dropdown showing CUR or PDO status*
-  *- Loan Project Type - Radio button or dropdown: C (Commercial) or D (Developmental)*
-  *- Currency - Dropdown for currency type selection*
-
-*The tab uses a vertical form layout with clear section groupings. Auto-populated fields are likely displayed with different styling (grayed out or read-only). Conditional fields (like "Guaranteed By") are enabled/disabled based on related field values.*
+*[Image shows the Loan Info tab interface with various loan-related fields]*
 
 | FIELDS | DESCRIPTION |
 | --- | --- |
@@ -187,47 +102,7 @@ The following are the fields on the screen:
 ## Balances Tab
 
 **Figure 6 - Balances Tab**
-
-*Screenshot of the Balances tab showing multi-currency financial data entry fields. The interface is organized in a grid format with three currency columns (Others, USD, Peso) and multiple row categories:*
-
-*- **Currency Conversion Rates** (Top section):*
-  *- From Other Currency to USD - Numeric input for exchange rate*
-  *- From USD to PHP - Numeric input for exchange rate*
-
-*- **Approved Amounts** (Row 1):*
-  *- Approved Amount (Others) - Numeric field with decimal precision*
-  *- Approved Amount (USD) - Numeric field with decimal precision*
-  *- Approved Amount (Peso) - Numeric field with decimal precision*
-
-*- **Released Amounts** (Row 2):*
-  *- Released Amount (Others) - Amount per Release Memo in other currency*
-  *- Released Amount (USD) - Amount per Release Memo in dollars*
-  *- Released Amount (Peso) - Amount to reserve in pesos*
-
-*- **Outstanding Principal Balance - OPB** (Row 3):*
-  *- OPB (Others) - Outstanding balance in other currency*
-  *- OPB (USD) - Outstanding balance in dollars*
-  *- OPB (Peso) - Outstanding balance in pesos (Mandatory field, calculated as Amount Secured + Amount Unsecured)*
-
-*- **Reserves** (Row 4):*
-  *- Reserves (Others/Dollar/Peso) - Reserve amounts in respective currencies*
-
-*- **Accrued Interest Receivable - AIR** (Row 5):*
-  *- AIR (Others/USD/Peso) - Accrued interest in respective currencies*
-
-*- **Actual Past Due** (Row 6):*
-  *- Actual Past Due (Others/Dollar/Peso) - Past due amounts in respective currencies*
-
-*- **Litigation Expenses - LT Exp** (Row 7):*
-  *- LT Exp (Others/USD/Peso) - Litigation expenses in respective currencies*
-
-*- **Advances** (Row 8):*
-  *- Advances (Others/USD/Peso) - Borrower advances in respective currencies*
-
-*- **Interest** (Row 9):*
-  *- Interest (Others/USD/Peso) - Interest amounts in respective currencies*
-
-*The form uses a spreadsheet-like layout with column headers for each currency type and row labels for each financial category. All numeric fields are formatted for currency display with appropriate decimal places (typically 2 decimal places). The interface allows parallel tracking of the same financial metrics across three different currencies, with automatic conversion capabilities based on the exchange rates entered at the top.*
+*[Image shows the Balances tab interface with currency conversion and balance fields]*
 
 | FIELDS | DESCRIPTION |
 | --- | --- |
@@ -264,37 +139,7 @@ The following are the fields on the screen:
 ## Collateral / Dates / GL Tab
 
 **Figure 7 - Collateral/ Dates/ GL Tab**
-
-*Screenshot of the Collateral/Dates/GL tab displaying three distinct sections for loan security, date tracking, and general ledger account codes:*
-
-*- **Collateral Section** (Top left):*
-  *- Security Code - Dropdown list for security code selection (codes like 01-Unsecured, 21-REM Insured, 22-REM Not Insured, etc.)*
-  *- Amount Secured - Numeric input for collateral-secured amount (Mandatory if OPB is not blank and not equal to Amount Unsecured)*
-  *- Amount Unsecured - Numeric input for unsecured amount (Mandatory if OPB is not blank and not equal to Amount Secured)*
-  *- Real Estate - Numeric input for real estate collateral value*
-  *- Machinery/Equipment - Numeric input for machinery and equipment collateral value*
-  *- Others/Unsecured - Numeric input for other unsecured collateral value*
-  *- Others/Secured - Numeric input for other secured collateral value*
-  *- No. of Amort in Arrears - Numeric input for number of amortization records in arrears*
-
-*- **Dates Section** (Top right):*
-  *- Date of Last Transaction - Date picker showing the most recent transaction date*
-  *- No. of Days Past Due - Numeric display field showing calculated past due days*
-  *- Past Due Date - Date picker for past due date*
-  *- RI Indicator - Dropdown for Regular Interest Rate Indicator (Fixed/Variable)*
-  *- Interest Rate - Numeric input showing annual interest rate percentage (with decimal precision)*
-
-*- **GL (General Ledger) Section** (Bottom):*
-  *- Principal - Text input for GL Account Code for Principal*
-  *- Interest Income - Text input for GL Account Code for Interest Income*
-  *- Advances - Text input for GL Account Code for Advances*
-  *- Guarantee Fee - Text input for GL Account Code for Guarantee Fee*
-  *- GL AIR - Text input for GL Account Code for Accrued Interest Receivable*
-  *- AI/PC - Text input for GL Account Code for AI/PC*
-  *- Exp. Litigation - Text input for GL Account Code for Litigation Expenses*
-  *- Reserves - Text input for GL Account Code for Reserves*
-
-*The tab uses a three-panel layout with the Collateral and Dates sections positioned side-by-side in the upper portion, and the GL section spanning the full width at the bottom. All GL account code fields follow a standard chart of accounts format (typically 21 characters as per database structure). Numeric fields include appropriate formatting for currency amounts and percentages. The interface maintains data validation rules ensuring that Amount Secured + Amount Unsecured equals OPB.*
+*[Image shows the Collateral, Dates, and GL tab interface with multiple sections]*
 
 ### Collateral
 
@@ -335,17 +180,7 @@ The following are the fields on the screen:
 ## Manner of Release Tab
 
 **Figure 8 - Manner of Release Tab**
-
-*Screenshot of the Manner of Release tab showing fields related to loan release documentation and accounting entries:*
-
-*- **Description Fields**:*
-  *- Description 2 (DR) - Text input field for additional remarks or notes related to Debit entries in the loan release transaction*
-  *- Description 2 (CR) - Text input field for additional remarks or notes related to Credit entries in the loan release transaction*
-  *- Credit Alias - Text input field (Mandatory) for credit account alias or reference code*
-
-*This tab appears to be a simpler form compared to other tabs, focusing specifically on the manner and documentation of loan release transactions. The DR (Debit) and CR (Credit) description fields allow users to enter supplementary information about the accounting entries associated with the loan release. The Credit Alias field is required and likely serves as a reference identifier for the credit side of the transaction.*
-
-*The interface maintains the same form layout style as other tabs with field labels on the left and input controls on the right. The mandatory Credit Alias field is likely visually distinguished (possibly with an asterisk or different styling) to indicate its required status.*
+*[Image shows the Manner of Release tab interface]*
 
 | FIELDS | DESCRIPTION |
 | --- | --- |

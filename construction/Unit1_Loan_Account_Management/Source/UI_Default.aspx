@@ -79,7 +79,12 @@
     </div>
 
     <!-- Recent Accounts -->
-    <h3>📋 Recent Accounts</h3>
+    <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 15px;">
+        <h3>📋 Recent Accounts</h3>
+        <asp:Button ID="btnExportRecentAccountsPDF" runat="server" Text="📄 Export to PDF" 
+            CssClass="btn btn-danger" OnClick="btnExportRecentAccountsPDF_Click" 
+            Visible="false" style="background-color: #dc3545; border-color: #dc3545;" />
+    </div>
     <div class="grid-container">
         <asp:GridView ID="gvRecentAccounts" runat="server" 
             AutoGenerateColumns="False" 

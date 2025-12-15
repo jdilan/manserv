@@ -65,7 +65,17 @@
                 </div>
             </form>
 
-            <div id="searchResults" class="results-container"></div>
+            <div id="searchResults" class="results-container">
+                <div id="searchResultsHeader" class="export-header" style="display: none;">
+                    <div class="export-info">
+                        <strong>Search Results</strong> - Click to export the current results to PDF
+                    </div>
+                    <button onclick="exportSearchResultsToPDF()" class="btn-export">
+                        📄 Export to PDF
+                    </button>
+                </div>
+                <div id="searchResultsContent"></div>
+            </div>
         </div>
 
         <!-- Create Tab -->
@@ -295,16 +305,177 @@
 
         <!-- Update Tab -->
         <div id="update-tab" class="tab-content">
-            <h2>Update Account</h2>
-            <p>First, load an account to update:</p>
-            <div class="form-row">
-                <div class="form-group">
-                    <label>Account ID:</label>
-                    <input type="number" id="update_accountId" placeholder="1">
+            <h2>✏️ Update Loan Account</h2>
+            <p>Search for an account to update, then modify the Customer Name, Long Name, and Guarantee/Litigation information.</p>
+
+            <!-- Load Account Section -->
+            <fieldset class="search-section">
+                <legend>🔍 Load Account</legend>
+                <div class="form-row">
+                    <div class="form-group">
+                        <label>Reference Number:</label>
+                        <input type="text" id="update_searchRefNo" placeholder="e.g., LA-2025-0001">
+                    </div>
+                    <div class="form-group" style="text-align: center; align-self: center;">
+                        <strong>OR</strong>
+                    </div>
+                    <div class="form-group">
+                        <label>Account ID:</label>
+                        <input type="number" id="update_searchAccountId" placeholder="e.g., 1">
+                    </div>
                 </div>
-                <button onclick="loadAccountForUpdate()">Load Account</button>
+                <div class="form-actions">
+                    <button onclick="loadAccountForUpdate()" class="btn-primary">🔍 Load Account</button>
+                    <button onclick="clearUpdateSearch()">🗑️ Clear</button>
+                </div>
+            </fieldset>
+
+            <!-- Account Information Panel (Initially Hidden) -->
+            <div id="updateFormContainer" style="display: none;">
+                <!-- General Information Section -->
+                <fieldset class="editable-section">
+                    <legend>General Information (Customer Name and Long Name are editable)</legend>
+                    
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label>Reference Number (Cannot be changed):</label>
+                            <input type="text" id="update_refNo" readonly class="readonly-field">
+                        </div>
+                        <div class="form-group">
+                            <label>Previous Reference Number (Read-only):</label>
+                            <input type="text" id="update_prevRefNo" readonly class="readonly-field">
+                        </div>
+                    </div>
+                    
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label>Customer Name: *</label>
+                            <input type="text" id="update_customerName" maxlength="40" required>
+                        </div>
+                        <div class="form-group">
+                            <label>Long Name: *</label>
+                            <input type="text" id="update_longName" maxlength="100" required>
+                        </div>
+                    </div>
+                    
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label>CRIB ID Number (Read-only):</label>
+                            <input type="text" id="update_cribId" readonly class="readonly-field">
+                        </div>
+                        <div class="form-group">
+                            <label>NIDSS Account Number (Read-only):</label>
+                            <input type="text" id="update_nidss" readonly class="readonly-field">
+                        </div>
+                    </div>
+                </fieldset>
+
+                <!-- Account Identification Section (Read-only) -->
+                <fieldset class="readonly-section">
+                    <legend>Account Identification (Read-only)</legend>
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label>Center Code:</label>
+                            <input type="text" id="update_centerCode" readonly class="readonly-field">
+                        </div>
+                        <div class="form-group">
+                            <label>Budget Unit:</label>
+                            <input type="text" id="update_budgetUnit" readonly class="readonly-field">
+                        </div>
+                    </div>
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label>Corporation:</label>
+                            <input type="text" id="update_corporation" readonly class="readonly-field">
+                        </div>
+                        <div class="form-group">
+                            <label>Book Code:</label>
+                            <input type="text" id="update_bookCode" readonly class="readonly-field">
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label>Economic Activity Code:</label>
+                        <input type="text" id="update_economicActivity" readonly class="readonly-field">
+                    </div>
+                </fieldset>
+
+                <!-- Loan Dates Section (Read-only) -->
+                <fieldset class="readonly-section">
+                    <legend>Loan Dates (Read-only)</legend>
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label>Original Release Date:</label>
+                            <input type="date" id="update_originalReleaseDate" readonly class="readonly-field">
+                        </div>
+                        <div class="form-group">
+                            <label>Maturity Date:</label>
+                            <input type="date" id="update_maturityDate" readonly class="readonly-field">
+                        </div>
+                    </div>
+                </fieldset>
+
+                <!-- Account Type and Funding Section (Read-only) -->
+                <fieldset class="readonly-section">
+                    <legend>Account Type and Funding (Read-only)</legend>
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label>Account Type:</label>
+                            <input type="text" id="update_accountType" readonly class="readonly-field">
+                        </div>
+                        <div class="form-group">
+                            <label>Fund Source:</label>
+                            <input type="text" id="update_fundSource" readonly class="readonly-field">
+                        </div>
+                    </div>
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label>Lending Program:</label>
+                            <input type="text" id="update_lendingProgram" readonly class="readonly-field">
+                        </div>
+                        <div class="form-group">
+                            <label>Currency:</label>
+                            <input type="text" id="update_currency" readonly class="readonly-field">
+                        </div>
+                    </div>
+                </fieldset>
+
+                <!-- Guarantee and Litigation Section (Editable) -->
+                <fieldset class="editable-section">
+                    <legend>Guarantee and Litigation Information (Editable)</legend>
+                    
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label>
+                                <input type="checkbox" id="update_isGuaranteed" onchange="toggleGuaranteedBy('update')">
+                                Is Guaranteed
+                            </label>
+                        </div>
+                        <div class="form-group">
+                            <label>Guaranteed By:</label>
+                            <input type="text" id="update_guaranteedBy" maxlength="100" placeholder="Enter guarantor name">
+                        </div>
+                    </div>
+                    
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label>
+                                <input type="checkbox" id="update_isUnderLitigation" onchange="toggleLitigationDate('update')">
+                                Is Under Litigation
+                            </label>
+                        </div>
+                        <div class="form-group">
+                            <label>Litigation Date:</label>
+                            <input type="date" id="update_litigationDate">
+                        </div>
+                    </div>
+                </fieldset>
+
+                <!-- Update Actions -->
+                <div class="form-actions">
+                    <button onclick="updateAccount()" class="btn-primary">💾 Update Account</button>
+                    <button onclick="cancelUpdate()">❌ Cancel</button>
+                </div>
             </div>
-            <div id="updateFormContainer"></div>
         </div>
 
         <!-- Delete Tab -->
@@ -344,7 +515,17 @@
                     </select>
                 </div>
             </div>
-            <div id="refDataResults" class="results-container"></div>
+            <div id="refDataResults" class="results-container">
+                <div id="refDataResultsHeader" class="export-header" style="display: none;">
+                    <div class="export-info">
+                        <strong>Reference Data</strong> - Click to export the current data to PDF
+                    </div>
+                    <button onclick="exportReferenceDataToPDF()" class="btn-export">
+                        📄 Export to PDF
+                    </button>
+                </div>
+                <div id="refDataResultsContent"></div>
+            </div>
         </div>
 
         <!-- Response Viewer -->
@@ -360,6 +541,8 @@
     </div>
 
     <!-- Scripts -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf-autotable/3.5.31/jspdf.plugin.autotable.min.js"></script>
     <script src="js/api-client.js"></script>
     <script src="js/sample-data.js"></script>
     <script src="js/response-viewer.js"></script>

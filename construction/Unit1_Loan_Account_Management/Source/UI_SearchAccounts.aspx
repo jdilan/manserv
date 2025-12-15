@@ -52,8 +52,17 @@
 
     <!-- Results -->
     <div>
-        <h3>Search Results</h3>
-        <asp:Label ID="lblResultCount" runat="server" Text="" style="font-weight: bold; color: #003366;"></asp:Label>
+        <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 15px;">
+            <div>
+                <h3>Search Results</h3>
+                <asp:Label ID="lblResultCount" runat="server" Text="" style="font-weight: bold; color: #003366;"></asp:Label>
+            </div>
+            <div>
+                <asp:Button ID="btnExportPDF" runat="server" Text="📄 Export to PDF" 
+                    CssClass="btn btn-danger" OnClick="btnExportPDF_Click" 
+                    Visible="false" style="background-color: #dc3545; border-color: #dc3545;" />
+            </div>
+        </div>
         
         <div class="grid-container">
             <asp:GridView ID="gvAccounts" runat="server" 

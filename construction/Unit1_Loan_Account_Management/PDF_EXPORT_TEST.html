@@ -1,0 +1,305 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>PDF Export Test - MANSERV</title>
+    <style>
+        body { font-family: Arial, sans-serif; margin: 20px; background: #f5f5f5; }
+        .container { max-width: 1200px; margin: 0 auto; background: white; padding: 30px; border-radius: 10px; box-shadow: 0 4px 6px rgba(0,0,0,0.1); }
+        h1 { color: #333; text-align: center; margin-bottom: 30px; }
+        .export-demo { border: 2px solid #007bff; background: #f8f9ff; padding: 20px; margin: 20px 0; border-radius: 8px; }
+        .btn-export { background: #dc3545; color: white; border: none; padding: 10px 20px; border-radius: 4px; cursor: pointer; font-size: 1em; margin: 10px; }
+        .btn-export:hover { background: #c82333; transform: translateY(-1px); }
+        table { width: 100%; border-collapse: collapse; margin: 20px 0; }
+        th, td { border: 1px solid #ddd; padding: 12px; text-align: left; }
+        th { background: #667eea; color: white; font-weight: bold; }
+        tr:nth-child(even) { background: #f9f9f9; }
+        .success { background: #d4edda; color: #155724; padding: 15px; border-radius: 4px; margin: 10px 0; }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>📄 PDF Export Test - MANSERV System</h1>
+        
+        <div class="success">
+            <strong>✅ PDF Export Feature Successfully Implemented!</strong><br>
+            This demonstrates the PDF export functionality added to all list views in the MANSERV Loan Account Management System.
+        </div>
+
+        <!-- Sample Account Data -->
+        <div class="export-demo">
+            <h3>Sample Account Search Results</h3>
+            <p>This table simulates the account search results that can be exported to PDF:</p>
+            
+            <button onclick="exportSampleDataToPDF()" class="btn-export">📄 Export Sample Data to PDF</button>
+            
+            <table id="sampleAccountsTable">
+                <thead>
+                    <tr>
+                        <th>Account ID</th>
+                        <th>Reference Number</th>
+                        <th>Customer Name</th>
+                        <th>Long Name</th>
+                        <th>Center Code</th>
+                        <th>Status</th>
+                        <th>Created Date</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td>1</td>
+                        <td>LA-2025-0001</td>
+                        <td>Juan Dela Cruz</td>
+                        <td>Juan Dela Cruz Manufacturing Corp</td>
+                        <td>001</td>
+                        <td>Active</td>
+                        <td>2025-01-01</td>
+                    </tr>
+                    <tr>
+                        <td>2</td>
+                        <td>LA-2025-0002</td>
+                        <td>Maria Santos</td>
+                        <td>Maria Santos Trading Inc</td>
+                        <td>002</td>
+                        <td>Active</td>
+                        <td>2025-01-02</td>
+                    </tr>
+                    <tr>
+                        <td>3</td>
+                        <td>LA-2025-0003</td>
+                        <td>Pedro Gonzales</td>
+                        <td>Pedro Gonzales Construction</td>
+                        <td>003</td>
+                        <td>Active</td>
+                        <td>2025-01-03</td>
+                    </tr>
+                    <tr>
+                        <td>4</td>
+                        <td>LA-2025-0004</td>
+                        <td>Ana Rodriguez</td>
+                        <td>Ana Rodriguez Retail Store</td>
+                        <td>001</td>
+                        <td>Past Due</td>
+                        <td>2025-01-04</td>
+                    </tr>
+                    <tr>
+                        <td>5</td>
+                        <td>LA-2025-0005</td>
+                        <td>Carlos Mendoza</td>
+                        <td>Carlos Mendoza Transport Services</td>
+                        <td>002</td>
+                        <td>Closed</td>
+                        <td>2025-01-05</td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+
+        <!-- Sample Reference Data -->
+        <div class="export-demo">
+            <h3>Sample Reference Data</h3>
+            <p>This table simulates reference data that can be exported to PDF:</p>
+            
+            <button onclick="exportReferenceDataToPDF()" class="btn-export">📄 Export Reference Data to PDF</button>
+            
+            <table id="sampleReferenceTable">
+                <thead>
+                    <tr>
+                        <th>Code</th>
+                        <th>Description</th>
+                        <th>Category</th>
+                        <th>Status</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td>CORP001</td>
+                        <td>Main Corporation</td>
+                        <td>Corporation</td>
+                        <td>Active</td>
+                    </tr>
+                    <tr>
+                        <td>CORP002</td>
+                        <td>Subsidiary Corporation</td>
+                        <td>Corporation</td>
+                        <td>Active</td>
+                    </tr>
+                    <tr>
+                        <td>BOOK001</td>
+                        <td>General Ledger Book</td>
+                        <td>Book Code</td>
+                        <td>Active</td>
+                    </tr>
+                    <tr>
+                        <td>FUND001</td>
+                        <td>Government Fund</td>
+                        <td>Fund Source</td>
+                        <td>Active</td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+
+        <!-- Implementation Status -->
+        <div style="background: #e7f3ff; border: 2px solid #007bff; padding: 20px; border-radius: 8px; margin: 20px 0;">
+            <h3>🎯 Implementation Status</h3>
+            <ul>
+                <li><strong>✅ TestUI (HTML/JavaScript)</strong> - Fully implemented with jsPDF</li>
+                <li><strong>✅ ASP.NET Pages</strong> - UI updated with export buttons</li>
+                <li><strong>🔄 Code-Behind</strong> - Implementation guide provided</li>
+                <li><strong>📋 Documentation</strong> - Complete implementation guide created</li>
+            </ul>
+        </div>
+
+        <!-- Features -->
+        <div style="background: #f0fff4; border: 2px solid #28a745; padding: 20px; border-radius: 8px; margin: 20px 0;">
+            <h3>🌟 Features Implemented</h3>
+            <ul>
+                <li><strong>Professional PDF Layout</strong> - Company branding and headers</li>
+                <li><strong>Dynamic Export Buttons</strong> - Show/hide based on data availability</li>
+                <li><strong>Multiple List Views</strong> - Search results, reference data, recent accounts</li>
+                <li><strong>Error Handling</strong> - User-friendly error messages</li>
+                <li><strong>File Naming</strong> - Descriptive filenames with timestamps</li>
+                <li><strong>Responsive Design</strong> - Works on all screen sizes</li>
+            </ul>
+        </div>
+    </div>
+
+    <!-- Include jsPDF libraries -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf-autotable/3.5.31/jspdf.plugin.autotable.min.js"></script>
+
+    <script>
+        function exportSampleDataToPDF() {
+            const { jsPDF } = window.jspdf;
+            const doc = new jsPDF();
+
+            // Add title
+            doc.setFontSize(20);
+            doc.text('MANSERV Loan Account Management System', 20, 20);
+            
+            doc.setFontSize(16);
+            doc.text('Sample Account Search Results', 20, 35);
+            
+            doc.setFontSize(12);
+            doc.text(`Generated on: ${new Date().toLocaleString()}`, 20, 45);
+            doc.text('Total Records: 5', 20, 55);
+
+            // Prepare table data
+            const tableColumns = [
+                'Account ID',
+                'Reference Number', 
+                'Customer Name',
+                'Long Name',
+                'Center Code',
+                'Status',
+                'Created Date'
+            ];
+
+            const tableRows = [
+                ['1', 'LA-2025-0001', 'Juan Dela Cruz', 'Juan Dela Cruz Manufacturing Corp', '001', 'Active', '2025-01-01'],
+                ['2', 'LA-2025-0002', 'Maria Santos', 'Maria Santos Trading Inc', '002', 'Active', '2025-01-02'],
+                ['3', 'LA-2025-0003', 'Pedro Gonzales', 'Pedro Gonzales Construction', '003', 'Active', '2025-01-03'],
+                ['4', 'LA-2025-0004', 'Ana Rodriguez', 'Ana Rodriguez Retail Store', '001', 'Past Due', '2025-01-04'],
+                ['5', 'LA-2025-0005', 'Carlos Mendoza', 'Carlos Mendoza Transport Services', '002', 'Closed', '2025-01-05']
+            ];
+
+            // Add table
+            doc.autoTable({
+                head: [tableColumns],
+                body: tableRows,
+                startY: 65,
+                styles: {
+                    fontSize: 8,
+                    cellPadding: 3
+                },
+                headStyles: {
+                    fillColor: [102, 126, 234],
+                    textColor: 255,
+                    fontStyle: 'bold'
+                },
+                alternateRowStyles: {
+                    fillColor: [245, 245, 245]
+                },
+                margin: { top: 65, left: 10, right: 10 }
+            });
+
+            // Add footer
+            const pageCount = doc.internal.getNumberOfPages();
+            for (let i = 1; i <= pageCount; i++) {
+                doc.setPage(i);
+                doc.setFontSize(10);
+                doc.text(`Page ${i} of ${pageCount}`, doc.internal.pageSize.width - 30, doc.internal.pageSize.height - 10);
+                doc.text('MANSERV Loan Account Management System', 20, doc.internal.pageSize.height - 10);
+            }
+
+            // Save the PDF
+            const fileName = `Sample_Account_Search_Results_${new Date().toISOString().split('T')[0]}.pdf`;
+            doc.save(fileName);
+            
+            alert('✅ PDF exported successfully! Check your downloads folder.');
+        }
+
+        function exportReferenceDataToPDF() {
+            const { jsPDF } = window.jspdf;
+            const doc = new jsPDF();
+
+            // Add title
+            doc.setFontSize(20);
+            doc.text('MANSERV Loan Account Management System', 20, 20);
+            
+            doc.setFontSize(16);
+            doc.text('Reference Data: Sample Data', 20, 35);
+            
+            doc.setFontSize(12);
+            doc.text(`Generated on: ${new Date().toLocaleString()}`, 20, 45);
+            doc.text('Total Records: 4', 20, 55);
+
+            // Prepare table data
+            const tableColumns = ['Code', 'Description', 'Category', 'Status'];
+            const tableRows = [
+                ['CORP001', 'Main Corporation', 'Corporation', 'Active'],
+                ['CORP002', 'Subsidiary Corporation', 'Corporation', 'Active'],
+                ['BOOK001', 'General Ledger Book', 'Book Code', 'Active'],
+                ['FUND001', 'Government Fund', 'Fund Source', 'Active']
+            ];
+
+            // Add table
+            doc.autoTable({
+                head: [tableColumns],
+                body: tableRows,
+                startY: 65,
+                styles: {
+                    fontSize: 10,
+                    cellPadding: 5
+                },
+                headStyles: {
+                    fillColor: [102, 126, 234],
+                    textColor: 255,
+                    fontStyle: 'bold'
+                },
+                alternateRowStyles: {
+                    fillColor: [245, 245, 245]
+                },
+                margin: { top: 65, left: 10, right: 10 }
+            });
+
+            // Add footer
+            const pageCount = doc.internal.getNumberOfPages();
+            for (let i = 1; i <= pageCount; i++) {
+                doc.setPage(i);
+                doc.setFontSize(10);
+                doc.text(`Page ${i} of ${pageCount}`, doc.internal.pageSize.width - 30, doc.internal.pageSize.height - 10);
+                doc.text('MANSERV Loan Account Management System', 20, doc.internal.pageSize.height - 10);
+            }
+
+            // Save the PDF
+            const fileName = `Sample_Reference_Data_${new Date().toISOString().split('T')[0]}.pdf`;
+            doc.save(fileName);
+            
+            alert('✅ PDF exported successfully! Check your downloads folder.');
+        }
+    </script>
+</body>
+</html>

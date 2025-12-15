@@ -405,6 +405,74 @@ table button {
     }
 }
 
+/* Update Tab Specific Styles */
+.search-section {
+    border: 2px solid #007bff !important;
+    background-color: #f8f9ff;
+}
+
+.editable-section {
+    border: 2px solid #28a745 !important;
+    background-color: #f8fff9;
+}
+
+.readonly-section {
+    border: 1px solid #ddd !important;
+    background-color: #f9f9f9;
+}
+
+.readonly-field {
+    background-color: #f0f0f0 !important;
+    color: #666;
+    cursor: not-allowed;
+}
+
+.editable-section legend {
+    color: #28a745 !important;
+    font-weight: bold;
+}
+
+.search-section legend {
+    color: #007bff !important;
+    font-weight: bold;
+}
+
+/* PDF Export Button Styling */
+.btn-export {
+    background: #dc3545 !important;
+    color: white !important;
+    border: none;
+    padding: 8px 16px;
+    border-radius: 4px;
+    cursor: pointer;
+    font-size: 0.9em;
+    font-weight: 500;
+    transition: all 0.3s;
+    margin-bottom: 10px;
+}
+
+.btn-export:hover {
+    background: #c82333 !important;
+    transform: translateY(-1px);
+    box-shadow: 0 4px 8px rgba(220, 53, 69, 0.3);
+}
+
+.export-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 15px;
+    padding: 10px;
+    background: #f8f9fa;
+    border-radius: 4px;
+    border-left: 4px solid #dc3545;
+}
+
+.export-info {
+    font-size: 0.9em;
+    color: #666;
+}
+
 /* Scrollbar Styling */
 ::-webkit-scrollbar {
     width: 10px;

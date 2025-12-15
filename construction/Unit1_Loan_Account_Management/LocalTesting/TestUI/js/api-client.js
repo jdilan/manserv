@@ -129,15 +129,20 @@ async function getAllAccounts() {
 }
 
 function displaySearchResults(accounts) {
-    const container = document.getElementById('searchResults');
+    const container = document.getElementById('searchResultsContent');
+    const header = document.getElementById('searchResultsHeader');
 
     if (!accounts || accounts.length === 0) {
         container.innerHTML = '<p>No accounts found.</p>';
+        header.style.display = 'none';
         return;
     }
 
+    // Store data globally for PDF export
+    window.currentSearchResults = accounts;
+
     let html = `<h3>Found ${accounts.length} account(s)</h3>`;
-    html += '<table><thead><tr>';
+    html += '<table id="searchResultsTable"><thead><tr>';
     html += '<th>ID</th><th>Reference Number</th><th>Customer Name</th>';
     html += '<th>Center</th><th>Status</th><th>Actions</th>';
     html += '</tr></thead><tbody>';
@@ -158,11 +163,14 @@ function displaySearchResults(accounts) {
 
     html += '</tbody></table>';
     container.innerHTML = html;
+    header.style.display = 'block';
 }
 
 function clearSearch() {
     document.getElementById('searchForm').reset();
-    document.getElementById('searchResults').innerHTML = '';
+    document.getElementById('searchResultsContent').innerHTML = '';
+    document.getElementById('searchResultsHeader').style.display = 'none';
+    window.currentSearchResults = null;
 }
 
 // ============================================================================
@@ -314,39 +322,218 @@ function displayAccountDetails(account) {
 // UPDATE OPERATION
 // ============================================================================
 
-async function loadAccountForUpdate() {
-    const accountId = document.getElementById('update_accountId').value;
+let currentUpdateAccount = null;
 
-    if (!accountId) {
-        alert('Please enter an Account ID');
+async function loadAccountForUpdate() {
+    // Clear any previous messages
+    clearUpdateMessages();
+
+    const referenceNumber = document.getElementById('update_searchRefNo').value.trim();
+    const accountIdText = document.getElementById('update_searchAccountId').value.trim();
+
+    if (!referenceNumber && !accountIdText) {
+        showUpdateError('Please enter either a Reference Number or Account ID to search.');
         return;
     }
 
-    const result = await apiCall(`/accounts/${accountId}`);
+    let result;
 
-    if (result.status === 200 && result.data.success) {
-        displayUpdateForm(result.data.data);
-    } else {
-        alert('Account not found');
+    // Search by Account ID first if provided
+    if (accountIdText) {
+        const accountId = parseInt(accountIdText);
+        if (isNaN(accountId)) {
+            showUpdateError('Invalid Account ID format. Please enter a valid number.');
+            return;
+        }
+
+        result = await apiCall(`/accounts/${accountId}`);
+        if (result.status !== 200 || !result.data.success) {
+            showUpdateError(`Account with ID ${accountId} not found.`);
+            return;
+        }
+    }
+    // Search by Reference Number
+    else if (referenceNumber) {
+        result = await apiCall(`/accounts/by-reference/${encodeURIComponent(referenceNumber)}`);
+        if (result.status !== 200 || !result.data.success) {
+            showUpdateError(`Account with Reference Number '${referenceNumber}' not found.`);
+            return;
+        }
+    }
+
+    if (result.data.success) {
+        currentUpdateAccount = result.data.data;
+        displayUpdateForm(currentUpdateAccount);
+        
+        // Clear search fields and show form
+        document.getElementById('update_searchRefNo').value = '';
+        document.getElementById('update_searchAccountId').value = '';
+        document.getElementById('updateFormContainer').style.display = 'block';
     }
 }
 
 async function loadAccountForUpdateById(accountId) {
-    document.getElementById('update_accountId').value = accountId;
+    document.getElementById('update_searchAccountId').value = accountId;
     showTab('update');
     await loadAccountForUpdate();
 }
 
 function displayUpdateForm(account) {
-    // Implementation similar to create form but pre-populated
-    // For brevity, showing simplified version
-    const container = document.getElementById('updateFormContainer');
-    container.innerHTML = `
-        <p>Update form for Account ID: ${account.accountId}</p>
-        <p>Reference Number: ${account.referenceNumber}</p>
-        <p><em>Full update form implementation would go here...</em></p>
-        <button onclick="alert('Update functionality - to be implemented')">Update Account</button>
-    `;
+    // Populate read-only fields
+    document.getElementById('update_refNo').value = account.referenceNumber || '';
+    document.getElementById('update_prevRefNo').value = account.previousReferenceNumber || '';
+    document.getElementById('update_cribId').value = account.cribidNumber || '';
+    document.getElementById('update_nidss').value = account.nidssAccountNumber || '';
+    document.getElementById('update_centerCode').value = account.centerCode || '';
+    document.getElementById('update_budgetUnit').value = account.budgetUnit || '';
+    document.getElementById('update_corporation').value = account.corporation || '';
+    document.getElementById('update_bookCode').value = account.bookCode || '';
+    document.getElementById('update_economicActivity').value = account.economicActivityCode || '';
+    document.getElementById('update_originalReleaseDate').value = account.originalReleaseDate ? account.originalReleaseDate.split('T')[0] : '';
+    document.getElementById('update_maturityDate').value = account.maturityDate ? account.maturityDate.split('T')[0] : '';
+    document.getElementById('update_accountType').value = account.accountType || '';
+    document.getElementById('update_fundSource').value = account.fundSource || '';
+    document.getElementById('update_lendingProgram').value = account.lendingProgram || '';
+    document.getElementById('update_currency').value = account.currency || '';
+
+    // Populate editable fields
+    document.getElementById('update_customerName').value = account.customerName || '';
+    document.getElementById('update_longName').value = account.longName || '';
+    document.getElementById('update_isGuaranteed').checked = account.isGuaranteed || false;
+    document.getElementById('update_guaranteedBy').value = account.guaranteedBy || '';
+    document.getElementById('update_isUnderLitigation').checked = account.isUnderLitigation || false;
+    document.getElementById('update_litigationDate').value = account.litigationDate ? account.litigationDate.split('T')[0] : '';
+
+    // Update dependent field states
+    toggleGuaranteedBy('update');
+    toggleLitigationDate('update');
+}
+
+async function updateAccount() {
+    if (!currentUpdateAccount) {
+        showUpdateError('Please load an account first before updating.');
+        return;
+    }
+
+    // Validate required fields
+    const customerName = document.getElementById('update_customerName').value.trim();
+    const longName = document.getElementById('update_longName').value.trim();
+
+    if (!customerName || !longName) {
+        showUpdateError('Customer Name and Long Name are required.');
+        return;
+    }
+
+    // Prepare update data - only include editable fields
+    const updateData = {
+        accountId: currentUpdateAccount.accountId,
+        referenceNumber: currentUpdateAccount.referenceNumber,
+        previousReferenceNumber: currentUpdateAccount.previousReferenceNumber,
+        
+        // Editable fields
+        customerName: customerName,
+        longName: longName,
+        isGuaranteed: document.getElementById('update_isGuaranteed').checked,
+        guaranteedBy: document.getElementById('update_isGuaranteed').checked ? 
+            document.getElementById('update_guaranteedBy').value.trim() || null : null,
+        isUnderLitigation: document.getElementById('update_isUnderLitigation').checked,
+        litigationDate: document.getElementById('update_isUnderLitigation').checked && 
+            document.getElementById('update_litigationDate').value ? 
+            document.getElementById('update_litigationDate').value : null,
+
+        // Preserve all other fields from current account
+        cribidNumber: currentUpdateAccount.cribidNumber,
+        nidssAccountNumber: currentUpdateAccount.nidssAccountNumber,
+        centerCode: currentUpdateAccount.centerCode,
+        budgetUnit: currentUpdateAccount.budgetUnit,
+        corporation: currentUpdateAccount.corporation,
+        bookCode: currentUpdateAccount.bookCode,
+        economicActivityCode: currentUpdateAccount.economicActivityCode,
+        originalReleaseDate: currentUpdateAccount.originalReleaseDate,
+        startOfTerm: currentUpdateAccount.startOfTerm,
+        maturityDate: currentUpdateAccount.maturityDate,
+        accountType: currentUpdateAccount.accountType,
+        purpose: currentUpdateAccount.purpose,
+        fundSource: currentUpdateAccount.fundSource,
+        lendingProgram: currentUpdateAccount.lendingProgram,
+        area: currentUpdateAccount.area,
+        isRestructured: currentUpdateAccount.isRestructured,
+        typeOfCredit: currentUpdateAccount.typeOfCredit,
+        maturityCode: currentUpdateAccount.maturityCode,
+        purposeOfCredit: currentUpdateAccount.purposeOfCredit,
+        numberOfRecords: currentUpdateAccount.numberOfRecords,
+        loanStatus: currentUpdateAccount.loanStatus,
+        loanProjectType: currentUpdateAccount.loanProjectType,
+        currency: currentUpdateAccount.currency,
+        status: currentUpdateAccount.status,
+        isDraft: currentUpdateAccount.isDraft
+    };
+
+    const result = await apiCall(`/accounts/${currentUpdateAccount.accountId}`, 'PUT', updateData);
+
+    if (result.status === 200 && result.data.success) {
+        showUpdateSuccess('Account updated successfully!');
+        // Reload the account to show updated data
+        currentUpdateAccount = result.data.data || updateData;
+        displayUpdateForm(currentUpdateAccount);
+    } else {
+        showUpdateError('Failed to update account. Check the response viewer for details.');
+    }
+}
+
+function cancelUpdate() {
+    if (currentUpdateAccount) {
+        // In a real application, this might redirect to ViewAccount
+        showUpdateError(`Cancel clicked - would redirect to ViewAccount.aspx?id=${currentUpdateAccount.accountId}`);
+    } else {
+        // In a real application, this might redirect to Default page
+        showUpdateError('Cancel clicked - would redirect to Default.aspx');
+    }
+}
+
+function clearUpdateSearch() {
+    document.getElementById('update_searchRefNo').value = '';
+    document.getElementById('update_searchAccountId').value = '';
+    document.getElementById('updateFormContainer').style.display = 'none';
+    currentUpdateAccount = null;
+    clearUpdateMessages();
+}
+
+function showUpdateSuccess(message) {
+    // Remove any existing messages
+    clearUpdateMessages();
+    
+    // Create success message
+    const successDiv = document.createElement('div');
+    successDiv.id = 'updateSuccessMessage';
+    successDiv.style.cssText = 'background: #d4edda; color: #155724; border: 1px solid #c3e6cb; padding: 15px; margin: 20px 0; border-radius: 4px;';
+    successDiv.innerHTML = `<strong>Success!</strong> ${message}`;
+    
+    // Insert after the search section
+    const searchSection = document.querySelector('#update-tab fieldset');
+    searchSection.parentNode.insertBefore(successDiv, searchSection.nextSibling);
+}
+
+function showUpdateError(message) {
+    // Remove any existing messages
+    clearUpdateMessages();
+    
+    // Create error message
+    const errorDiv = document.createElement('div');
+    errorDiv.id = 'updateErrorMessage';
+    errorDiv.style.cssText = 'background: #f8d7da; color: #721c24; border: 1px solid #f5c6cb; padding: 15px; margin: 20px 0; border-radius: 4px;';
+    errorDiv.innerHTML = `<strong>Error!</strong> ${message}`;
+    
+    // Insert after the search section
+    const searchSection = document.querySelector('#update-tab fieldset');
+    searchSection.parentNode.insertBefore(errorDiv, searchSection.nextSibling);
+}
+
+function clearUpdateMessages() {
+    const successMsg = document.getElementById('updateSuccessMessage');
+    const errorMsg = document.getElementById('updateErrorMessage');
+    if (successMsg) successMsg.remove();
+    if (errorMsg) errorMsg.remove();
 }
 
 // ============================================================================
@@ -400,15 +587,20 @@ async function loadReferenceData() {
 }
 
 function displayReferenceData(data, dataType) {
-    const container = document.getElementById('refDataResults');
+    const container = document.getElementById('refDataResultsContent');
+    const header = document.getElementById('refDataResultsHeader');
 
     if (!data || data.length === 0) {
         container.innerHTML = '<p>No data found.</p>';
+        header.style.display = 'none';
         return;
     }
 
+    // Store data globally for PDF export
+    window.currentReferenceData = { data: data, type: dataType };
+
     let html = `<h3>${dataType}</h3>`;
-    html += '<table><thead><tr>';
+    html += '<table id="refDataTable"><thead><tr>';
 
     // Determine columns based on data type
     const firstItem = data[0];
@@ -430,6 +622,7 @@ function displayReferenceData(data, dataType) {
 
     html += '</tbody></table>';
     container.innerHTML = html;
+    header.style.display = 'block';
 }
 
 // ============================================================================
@@ -496,4 +689,151 @@ function toggleLitigationDate(prefix) {
     
     litigationDateField.disabled = !isUnderLitigation;
     litigationDateField.required = isUnderLitigation;
+}
+
+// ============================================================================
+// PDF EXPORT FUNCTIONS
+// ============================================================================
+
+function exportSearchResultsToPDF() {
+    if (!window.currentSearchResults || window.currentSearchResults.length === 0) {
+        alert('No search results to export');
+        return;
+    }
+
+    const { jsPDF } = window.jspdf;
+    const doc = new jsPDF();
+
+    // Add title
+    doc.setFontSize(20);
+    doc.text('MANSERV Loan Account Management System', 20, 20);
+    
+    doc.setFontSize(16);
+    doc.text('Account Search Results', 20, 35);
+    
+    doc.setFontSize(12);
+    doc.text(`Generated on: ${new Date().toLocaleString()}`, 20, 45);
+    doc.text(`Total Records: ${window.currentSearchResults.length}`, 20, 55);
+
+    // Prepare table data
+    const tableColumns = [
+        'Account ID',
+        'Reference Number', 
+        'Customer Name',
+        'Long Name',
+        'Center Code',
+        'Status',
+        'Created Date'
+    ];
+
+    const tableRows = window.currentSearchResults.map(account => [
+        account.accountId || 'N/A',
+        account.referenceNumber || 'N/A',
+        account.customerName || 'N/A',
+        account.longName || 'N/A',
+        account.centerCode || 'N/A',
+        account.status || 'N/A',
+        account.createdDate ? new Date(account.createdDate).toLocaleDateString() : 'N/A'
+    ]);
+
+    // Add table
+    doc.autoTable({
+        head: [tableColumns],
+        body: tableRows,
+        startY: 65,
+        styles: {
+            fontSize: 8,
+            cellPadding: 3
+        },
+        headStyles: {
+            fillColor: [102, 126, 234],
+            textColor: 255,
+            fontStyle: 'bold'
+        },
+        alternateRowStyles: {
+            fillColor: [245, 245, 245]
+        },
+        margin: { top: 65, left: 10, right: 10 }
+    });
+
+    // Add footer
+    const pageCount = doc.internal.getNumberOfPages();
+    for (let i = 1; i <= pageCount; i++) {
+        doc.setPage(i);
+        doc.setFontSize(10);
+        doc.text(`Page ${i} of ${pageCount}`, doc.internal.pageSize.width - 30, doc.internal.pageSize.height - 10);
+        doc.text('MANSERV Loan Account Management System', 20, doc.internal.pageSize.height - 10);
+    }
+
+    // Save the PDF
+    const fileName = `Account_Search_Results_${new Date().toISOString().split('T')[0]}.pdf`;
+    doc.save(fileName);
+}
+
+function exportReferenceDataToPDF() {
+    if (!window.currentReferenceData || !window.currentReferenceData.data || window.currentReferenceData.data.length === 0) {
+        alert('No reference data to export');
+        return;
+    }
+
+    const { jsPDF } = window.jspdf;
+    const doc = new jsPDF();
+    const data = window.currentReferenceData.data;
+    const dataType = window.currentReferenceData.type;
+
+    // Add title
+    doc.setFontSize(20);
+    doc.text('MANSERV Loan Account Management System', 20, 20);
+    
+    doc.setFontSize(16);
+    doc.text(`Reference Data: ${dataType}`, 20, 35);
+    
+    doc.setFontSize(12);
+    doc.text(`Generated on: ${new Date().toLocaleString()}`, 20, 45);
+    doc.text(`Total Records: ${data.length}`, 20, 55);
+
+    // Prepare table data
+    const firstItem = data[0];
+    const tableColumns = Object.keys(firstItem).map(key => 
+        key.charAt(0).toUpperCase() + key.slice(1).replace(/([A-Z])/g, ' $1')
+    );
+
+    const tableRows = data.map(item => 
+        Object.values(item).map(value => 
+            value !== null && value !== undefined ? String(value) : 'N/A'
+        )
+    );
+
+    // Add table
+    doc.autoTable({
+        head: [tableColumns],
+        body: tableRows,
+        startY: 65,
+        styles: {
+            fontSize: 8,
+            cellPadding: 3
+        },
+        headStyles: {
+            fillColor: [102, 126, 234],
+            textColor: 255,
+            fontStyle: 'bold'
+        },
+        alternateRowStyles: {
+            fillColor: [245, 245, 245]
+        },
+        margin: { top: 65, left: 10, right: 10 }
+    });
+
+    // Add footer
+    const pageCount = doc.internal.getNumberOfPages();
+    for (let i = 1; i <= pageCount; i++) {
+        doc.setPage(i);
+        doc.setFontSize(10);
+        doc.text(`Page ${i} of ${pageCount}`, doc.internal.pageSize.width - 30, doc.internal.pageSize.height - 10);
+        doc.text('MANSERV Loan Account Management System', 20, doc.internal.pageSize.height - 10);
+    }
+
+    // Save the PDF
+    const fileName = `Reference_Data_${dataType.replace(/\s+/g, '_')}_${new Date().toISOString().split('T')[0]}.pdf`;
+    doc.save(fileName);
 }
